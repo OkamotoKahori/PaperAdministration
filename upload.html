@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" constent="text/html; charset=UTF-8" />
+    <title>論文のアップロード</title>
+</head>
+
+<body>
+    <h1>論文のアップロード</h1>
+    <form>
+        <p>論文タイトル</p>
+        <input type="text" name="paper_name">
+        <p>著者名</p>
+        <input type="text" name="author">
+        <p>学会名</p>
+        <input type="text" name="society">
+        <!-- 国内か国外を選択できるボタンを入れる -->
+        <input type="radio" name="select" value="domestic">国内
+        <input type="radio" name="select" value="overseas">国外
+        <p>発表年</p>
+        <input type="text" name="year">
+        <p>キーワード</p>
+        <input type="text" name="keyword">
+        <p>分野の選択</p>
+        <select name="category">
+            <option value="real">実世界</option>
+            <option value="communication">コミュニケーション</option>
+            <option value="gimmick">仕掛け学</option>
+            <option value="info">情報編纂</option>
+            <option value="comic">コミック工学</option>
+        </select>
+        <p>
+            <input type="submit" value="アップロード">
+        </p>
+    </form>
+</body>
+
+</html>
