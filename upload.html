@@ -8,15 +8,15 @@
 
 <body>
     <h1>論文のアップロード</h1>
-    <form>
+    <form action="main.php" method="post" enctype="multipart/form-data">
         <p>論文タイトル</p>
-        <input type="text" name="paper_name">
+        <input type="text" name="title">
         <p>著者名</p>
         <input type="text" name="author">
         <p>学会名</p>
         <input type="text" name="society">
-        <!-- 国内か国外を選択できるボタンを入れる -->
-        <input type="radio" name="select" value="domestic">国内
+        <!-- 国内か国外を選択できるボタン -->
+        <input type="radio" name="select" value="domestic" checked>国内
         <input type="radio" name="select" value="overseas">国外
         <p>発表年</p>
         <input type="text" name="year">
@@ -27,12 +27,14 @@
             <option value="real">実世界</option>
             <option value="communication">コミュニケーション</option>
             <option value="gimmick">仕掛け学</option>
-            <option value="info">情報編纂</option>
+            <option value="compilation">情報編纂</option>
             <option value="comic">コミック工学</option>
         </select>
         <p>論文ファイル</p>
         <input type="file" name="upfile">
-        <p><input type="submit" value="送信"></p>
+        <p>
+            <input type="submit" value="送信">
+        </p>
     </form>
 </body>
 
