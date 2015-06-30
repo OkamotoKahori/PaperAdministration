@@ -33,7 +33,22 @@ $filename = "database.txt";
 chmod($filename, 0766);
 $fp = fopen($filename, "a");
 // txtに書き込む項目
-fwrite($fp, "abc");
+$title = htmlspecialchars($_POST['title']);
+$author = htmlspecialchars($_POST['author']);
+$society = htmlspecialchars($_POST['society']);
+$select = htmlspecialchars($_POST['select']);
+$year = htmlspecialchars($_POST['year']);
+$keyword = htmlspecialchars($_POST['keyword']);
+$category = htmlspecialchars($_POST['category']);
+echo "以下の論文をアップロードしました。<br/> 
+論文タイトル：{$title} <br/> 
+著者：{$author} <br/> 
+学会名：{$society}, {$select} <br/>
+発表年：{$year} <br/>
+キーワード：{$keyword} <br/>
+分野：{$category}";
+fwrite($fp, $title.",".$author.",".$society.",".$select.",".$year.",".$keyword.",".$category);
+fwrite($fp,"\n");
 fclose($fp);
 
 ?>
