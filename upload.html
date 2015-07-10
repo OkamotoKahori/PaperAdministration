@@ -8,7 +8,7 @@
 
 <body>
     <h1>論文のアップロード</h1>
-    <form action="main.php" method="post" enctype="multipart/form-data">
+    <form action="main.php" method="post" enctype="multipart/form-data" accept-charset="utf-8">
         <p>論文タイトル</p>
         <input type="text" name="title">
         <p>著者名</p>
@@ -32,7 +32,7 @@
             <option value="オノマトペ">オノマトペ</option>
         </select>
         <p>論文ファイル</p>
-        <input type="file" name="upfile">
+        <input type="file" name="upfile" value="">
         <p>
             <input type="submit" value="送信">
         </p>

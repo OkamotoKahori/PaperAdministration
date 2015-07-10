@@ -1,32 +1,26 @@
 <?php
+// ファイルのアップロード
+// if(isset($_FILES['upfile'])){
+	// ファイル名の取り出し
+	$localFilename = $_FILES['upfile']['name'];
+	//一時ファイル名の取り出し 
+	$temp = $_FILES['upfile']['tmp_name'];
+	// 保存先のディレクトリ
+	$dir = 'PaperFiles/';
 
-// // 画像のアップロード処理
-// // アップロードが正常に行われたかチェック
-// if ( $_FILES["upfile"]["error"] == UPLOAD_ERR_OK )
-// {
-//     // アップロード先とファイル名を付与
-//     $upload_file = "./PaperFiles/" . $_FILES["upfile"]["name"] ;
-     
-//     // アップロードしたファイルを指定のパスへ移動
-//     if ( move_uploaded_file( $_FILES["upfile"]["tmp_name"], $upload_file ) )
-//     {
-//         // パーミッションを変更
-//         // Read and write for owner, read for everybody
-//         chmod($upload_file, 0644);
-//     } 
-// } 
 
-// if (is_uploaded_file($_FILES["upfile"]["tmp_name"])) {
-//   if (move_uploaded_file($_FILES["upfile"]["tmp_name"], "./PaperFiles/" . $_FILES["upfile"]["name"])) {
-//     chmod("./PaperFiles/" . $_FILES["upfile"]["name"], 0644);
-//     echo $_FILES["upfile"]["name"] . "をアップロードしました。";
-//   } else {
-//     echo "ファイルをアップロードできません。";
-//   }
-// } else {
-//   echo "ファイルが選択されていません。";
+	if (move_uploaded_file($temp, $dir . $localFilename)) {
+ 		echo '<p>アップロードされたファイルです:' . h($localFilename) . '</p>';
+	}else{
+		echo '<p>アップロードされていないファイルです:' . h($localFilename) . '</p>';
+	}
 // }
 
+
+
+function h($string){
+	return htmlspecialchars($string, ENT_QUOTES);
+}
 
 // 入力した項目を保存する
 $filename = "database.txt";
@@ -40,15 +34,17 @@ $select = htmlspecialchars($_POST['select']);
 $year = htmlspecialchars($_POST['year']);
 $keyword = htmlspecialchars($_POST['keyword']);
 $category = htmlspecialchars($_POST['category']);
+$upfile = htmlspecialchars($_POST['upfile']);
+
 echo "以下の論文をアップロードしました。<br/> 
 論文タイトル：{$title} <br/> 
 著者：{$author} <br/> 
 学会名：{$society}, {$select} <br/>
 発表年：{$year} <br/>
 キーワード：{$keyword} <br/>
-分野：{$category}";
-fwrite($fp, $title.",".$author.",".$society.",".$select.",".$year.",".$keyword.",".$category);
-fwrite($fp,"\n");
+分野：{$category} <br/>
+ファイル名：{$localFilename}";
+fwrite($fp, $title.",".$author.",".$society.",".$select.",".$year.",".$keyword.",".$category.",".$localFilename."\n");
 fclose($fp);
 
 ?>
