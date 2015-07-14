@@ -1,4 +1,22 @@
 <?php
+	// 正規ルートでページに遷移したか確認
+	session_start();
+
+	// ログイン状態のチェック
+	if (!isset($_SESSION["USERID"])) {
+		echo '<script type = "text/javascript">';
+    	echo "<!--\n";
+    	echo 'alert("パスワードを認証してください");' ."\n";
+   		// メッセージボックスでOKを押したら入力フォームへ戻る
+    	echo 'location.href = "password.html"';
+    	echo '// -->';
+    	echo '</script>';
+	    session_destroy();//セッション破棄
+		// header("Location: password.html");
+	  exit;
+	}
+
+
 // ファイルのアップロード
 // if(isset($_FILES['upfile'])){
 	// ファイル名の取り出し
