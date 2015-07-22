@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" constent="text/html; charset=UTF-8" />
+    <title>論文のアップロード</title>
+</head>
+
+<body>
+    <h1>論文のアップロード</h1>
+    <form action="upload.php" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+        <p>論文タイトル</p>
+        <input type="text" name="title">
+        <p>著者名</p>
+        <input type="text" name="author">
+        <p>学会名</p>
+        <input type="text" name="society">
+        <!-- 国内か国外を選択できるボタン -->
+        <input type="radio" name="select" value="国内" checked>国内
+        <input type="radio" name="select" value="国外">国外
+        <p>発表年</p>
+        <input type="text" name="year">
+        <p>キーワード</p>
+        <input type="text" name="keyword">
+        <p>分野</p>
+        <select name="category">
+            <option value="実世界">実世界</option>
+            <option value="コミュニケーション">コミュニケーション</option>
+            <option value="仕掛け学">仕掛け学</option>
+            <option value="情報編纂">情報編纂</option>
+            <option value="コミック工学">コミック工学</option>
+            <option value="オノマトペ">オノマトペ</option>
+        </select>
+        <p>論文ファイル</p>
+        <input type="file" name="upfile" value="">
+        <p>
+            <input type="submit" value="送信">
+        </p>
+    </form>
+</body>
+
+</html>
+
+<!--   bibtexの項目
+  author =   {Pattie Maes},
+  title =    {Agents That Reduce Work and Information Overload},
+  journal =  {Communications of the ACM},
+  year =     1994,
+  volume =   37,
+  number =   7,
+  pages =    {30-40} -->
