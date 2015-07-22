@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" constent="text/html; charset=UTF-8" />
+    <title>PHP入門</title>
+    <script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+</head>
+
+<body>
+    <h1>論文管理システム</h1>
+    <input type="button" onclick="location.href='password.html'" value="論文のアップロード">
+    <h1>What's New!</h1>
+    <p>以下の論文がアップロードされました</p>
+    <div class="WhatsNew">
+        <p></p>
+    </div>
+
+    <!-- What's New!用 -->
+    <script type="text/javascript">
+    // テキストファイルを最新のものが上になるように逆順に並べて表示する
+    $(function() {
+        $.ajax({
+            url: 'WhatsNew.txt',
+            success: function(data) {
+                var data_array = data.split(/\r\n|\r|\n/);	//改行コードで分割
+                var len = data_array.length;
+                for (var i = len-1; i >= 0; i--) {
+                    console.log(data_array[i]);
+                    $(".WhatsNew p").append(data_array[i] + "<br />");
+
+                }
+            }
+        });
+    });
+    </script>
+</body>
+
+</html>
