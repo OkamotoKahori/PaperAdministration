@@ -3,54 +3,99 @@
 
 <head>
     <meta http-equiv="Content-Type" constent="text/html; charset=UTF-8" />
-    <title>PHP入門</title>
     <script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="main.css">
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/simple-sidebar.css" rel="stylesheet">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>PHP入門</title>
 </head>
 
 <body>
-    <div class="container">
-        <div class="top">
-            <h1>論文管理システム</h1>
-            <button type="button" class="btn btn-xs pull-right" onclick="location.href='password.html'">論文のアップロード</button>
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#">
+                        論文管理システム
+                    </a>
+                </li>
+                <li>
+                    <a href="#">すべて</a>
+                </li>
+                <li>
+                    <a href="#">国内発表</a>
+                </li>
+                <li>
+                    <a href="#">国際会議</a>
+                </li>
+                <li>
+                    <a href="#">論文誌</a>
+                </li>
+                <li>
+                    <a href="#">学位論文</a>
+                </li>
+                <li>
+                    <a href="#">受賞・報道</a>
+                </li>
+                <li>
+                	<a href="password.html">論文のアップロード</a>
+                </li>
+            </ul>
         </div>
-        <!-- top -->
-        <div class="row">
-            <div class="col-sm-3">
-                
-            </div>
-            <!-- col-sm-3 -->
-            <div class="col-sm-9">
-                <h1>What's New!</h1>
-                <p>以下の論文がアップロードされました</p>
-                <div class="WhatsNew">
-                    <p></p>
-                </div>
-                <!-- What's New!用 -->
-                <script type="text/javascript">
-                // テキストファイルを最新のものが上になるように逆順に並べて表示する
-                $(function() {
-                    $.ajax({
-                        url: 'WhatsNew.txt',
-                        success: function(data) {
-                            var data_array = data.split(/\r\n|\r|\n/); //改行コードで分割
-                            var len = data_array.length;
-                            for (var i = len - 1; i >= 0; i--) {
-                                console.log(data_array[i]);
-                                $(".WhatsNew p").append(data_array[i] + "<br />");
+        <!-- /#sidebar-wrapper -->
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>What's new!</h1>
+                        <p>以下の論文がアップロードされました</p>
+                        <div class="WhatsNew">
+                            <p></p>
+                        </div>
+                        <!-- What's New!用 -->
+                        <script type="text/javascript">
+                        // テキストファイルを最新のものが上になるように逆順に並べて表示する
+                        $(function() {
+                            $.ajax({
+                                url: 'WhatsNew.txt',
+                                success: function(data) {
+                                    var data_array = data.split(/\r\n|\r|\n/); //改行コードで分割
+                                    var len = data_array.length;
+                                    for (var i = len - 1; i >= 0; i--) {
+                                        console.log(data_array[i]);
+                                        $(".WhatsNew p").append(data_array[i] + "<br />");
 
-                            }
-                        }
-                    });
-                });
-                </script>
+                                    }
+                                }
+                            });
+                        });
+                        </script>
+                    </div>
+                </div>
             </div>
-            <!-- col-sm-9 -->
         </div>
-        <!-- row -->
+        <!-- /#page-content-wrapper -->
     </div>
-    <!-- container -->
+    <!-- /#wrapper -->
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- Menu Toggle Script -->
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    </script>
+
 </body>
 
 </html>
