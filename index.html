@@ -5,35 +5,52 @@
     <meta http-equiv="Content-Type" constent="text/html; charset=UTF-8" />
     <title>PHP入門</title>
     <script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
-    <h1>論文管理システム</h1>
-    <input type="button" onclick="location.href='password.html'" value="論文のアップロード">
-    <h1>What's New!</h1>
-    <p>以下の論文がアップロードされました</p>
-    <div class="WhatsNew">
-        <p></p>
+    <div class="container">
+        <div class="top">
+            <h1>論文管理システム</h1>
+            <button type="button" class="btn btn-xs pull-right" onclick="location.href='password.html'">論文のアップロード</button>
+        </div>
+        <!-- top -->
+        <div class="row">
+            <div class="col-sm-3">
+                
+            </div>
+            <!-- col-sm-3 -->
+            <div class="col-sm-9">
+                <h1>What's New!</h1>
+                <p>以下の論文がアップロードされました</p>
+                <div class="WhatsNew">
+                    <p></p>
+                </div>
+                <!-- What's New!用 -->
+                <script type="text/javascript">
+                // テキストファイルを最新のものが上になるように逆順に並べて表示する
+                $(function() {
+                    $.ajax({
+                        url: 'WhatsNew.txt',
+                        success: function(data) {
+                            var data_array = data.split(/\r\n|\r|\n/); //改行コードで分割
+                            var len = data_array.length;
+                            for (var i = len - 1; i >= 0; i--) {
+                                console.log(data_array[i]);
+                                $(".WhatsNew p").append(data_array[i] + "<br />");
+
+                            }
+                        }
+                    });
+                });
+                </script>
+            </div>
+            <!-- col-sm-9 -->
+        </div>
+        <!-- row -->
     </div>
-
-    <!-- What's New!用 -->
-    <script type="text/javascript">
-    // テキストファイルを最新のものが上になるように逆順に並べて表示する
-    $(function() {
-        $.ajax({
-            url: 'WhatsNew.txt',
-            success: function(data) {
-                var data_array = data.split(/\r\n|\r|\n/);	//改行コードで分割
-                var len = data_array.length;
-                for (var i = len-1; i >= 0; i--) {
-                    console.log(data_array[i]);
-                    $(".WhatsNew p").append(data_array[i] + "<br />");
-
-                }
-            }
-        });
-    });
-    </script>
+    <!-- container -->
 </body>
 
 </html>

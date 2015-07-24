@@ -4,48 +4,134 @@
 <head>
     <meta http-equiv="Content-Type" constent="text/html; charset=UTF-8" />
     <title>論文のアップロード</title>
+    <script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
     <h1>論文のアップロード</h1>
     <form action="upload.php" method="post" enctype="multipart/form-data" accept-charset="utf-8">
-        <p>論文タイトル</p>
-        <input type="text" name="title">
-        <p>著者名</p>
-        <input type="text" name="author">
-        <p>学会名</p>
-        <input type="text" name="society">
-        <!-- 国内か国外を選択できるボタン -->
-        <input type="radio" name="select" value="国内" checked>国内
-        <input type="radio" name="select" value="国外">国外
-        <p>発表年</p>
-        <input type="text" name="year">
-        <p>キーワード</p>
-        <input type="text" name="keyword">
-        <p>分野</p>
-        <select name="category">
-            <option value="実世界">実世界</option>
-            <option value="コミュニケーション">コミュニケーション</option>
-            <option value="仕掛け学">仕掛け学</option>
-            <option value="情報編纂">情報編纂</option>
-            <option value="コミック工学">コミック工学</option>
-            <option value="オノマトペ">オノマトペ</option>
-        </select>
-        <p>論文ファイル</p>
-        <input type="file" name="upfile" value="">
-        <p>
-            <input type="submit" value="送信">
-        </p>
+        <button type="button" class="btn btn-lg" id="Conference">学会発表</button>
+        <button type="button" class="btn btn-lg" id="Journal">論文誌</button>
+        <button type="button" class="btn btn-lg" id="Thesis">学位論文</button>
+        <div id="main"></div>
+        <!-- アップロード論文の種類の選択 -->
+        <script type="text/javascript">
+        // 学会発表を選択した時
+        $('#Conference').on('click', function() {
+            $('#main').empty();
+            $('#main').append(
+                '<input type="hidden" name="genre" value="0">'+
+                '<p>論文タイトル</p>' +
+                '<input type="text" name="title">' +
+                '<p>著者名</p>' +
+                '<input type="text" name="author">' +
+                '<p>学会名</p>' +
+                '<input type="text" name="journal">' +
+                '<!-- 国内か国外を選択できるボタン -->' +
+                '<input type="radio" name="select" value="Japan" checked>国内' +
+                '<input type="radio" name="select" value="Outside">国外' +
+                '<p>Vol.</p>' +
+                '<input type="text" name="volume">' +
+                '<p>No.</p>' +
+                '<input type="text" name="number">' +
+                '<p>page</p>' +
+                '<input type="text" name="page">' +
+                '<p>発表年</p>' +
+                '<input type="text" name="year">' +
+                '<p>キーワード</p>' +
+                '<input type="text" name="keyword">' +
+                '<p>分野</p>' +
+                '<select name="category">' +
+                '    <option value="Real">実世界</option>' +
+                '    <option value="Communication">コミュニケーション</option>' +
+                '    <option value="Gimmick">仕掛け学</option>' +
+                '    <option value="InformationCompiled">情報編纂</option>' +
+                '    <option value="Comic">コミック工学</option>' +
+                '    <option value="Onomatopoeia">オノマトペ</option>' +
+                '</select>' +
+                '<p>論文ファイル</p>' +
+                '<input type="file" name="upfile" value="">' +
+                '<p>' +
+                '<input type="submit" value="送信">' +
+                '</p>');
+
+        });
+        //論文誌を選択した時 
+        $('#Journal').on('click', function() {
+            $('#main').empty();
+            $('#main').append(
+                '<input type="hidden" name="genre" value="1">'+
+                '<p>論文タイトル</p>' +
+                '<input type="text" name="title">' +
+                '<p>著者名</p>' +
+                '<input type="text" name="author">' +
+                '<p>論文誌名</p>' +
+                '<input type="text" name="journal">' +
+                '<!-- 国内か国外を選択できるボタン -->' +
+                '<input type="radio" name="select" value="Japan" checked>国内' +
+                '<input type="radio" name="select" value="Outside">国外' +
+                '<p>Vol.</p>' +
+                '<input type="text" name="volume">' +
+                '<p>No.</p>' +
+                '<input type="text" name="number">' +
+                '<p>page</p>' +
+                '<input type="text" name="page">' +
+                '<p>発表年</p>' +
+                '<input type="text" name="year">' +
+                '<p>キーワード</p>' +
+                '<input type="text" name="keyword">' +
+                '<p>分野</p>' +
+                '<select name="category">' +
+                '    <option value="Real">実世界</option>' +
+                '    <option value="Communication">コミュニケーション</option>' +
+                '    <option value="Gimmick">仕掛け学</option>' +
+                '    <option value="InformationCompiled">情報編纂</option>' +
+                '    <option value="Comic">コミック工学</option>' +
+                '    <option value="Onomatopoeia">オノマトペ</option>' +
+                '</select>' +
+                '<p>論文ファイル</p>' +
+                '<input type="file" name="upfile" value="">' +
+                '<p>' +
+                '<input type="submit" value="送信">' +
+                '</p>');
+
+        });
+        //学位論文を選択した時    
+        $('#Thesis').on('click', function() {
+            $('#main').empty();
+            $('#main').append(
+                '<input type="hidden" name="genre" value="2">'+
+                '<p>論文タイトル</p>' +
+                '<input type="text" name="title">' +
+                '<p>著者名</p>' +
+                '<input type="text" name="author">' +
+                '<p>学位の選択</p>' +
+                '<input type="radio" name="degree" value="Bachelor" checked>学士' +
+                '<input type="radio" name="degree" value="Master">修士' +
+                '<input type="radio" name="degree" value="PhD">博士' +
+                '<p>卒業年度</p>' +
+                '<p>西暦<input type="text" name="year">年度</p>' +
+                '<p>キーワード</p>' +
+                '<input type="text" name="keyword">' +
+                '<p>分野</p>' +
+                '<select name="category">' +
+                '    <option value="Real">実世界</option>' +
+                '    <option value="Communication">コミュニケーション</option>' +
+                '    <option value="Gimmick">仕掛け学</option>' +
+                '    <option value="InformationCompiled">情報編纂</option>' +
+                '   <option value="Comic">コミック工学</option>' +
+                '    <option value="Onomatopoeia">オノマトペ</option>' +
+                '</select>' +
+                '<p>論文ファイル</p>' +
+                '<input type="file" name="upfile" value="">' +
+                '<p>' +
+                '    <input type="submit" value="送信"></p>');
+
+        });
+        </script>
     </form>
 </body>
 
 </html>
-
-<!--   bibtexの項目
-  author =   {Pattie Maes},
-  title =    {Agents That Reduce Work and Information Overload},
-  journal =  {Communications of the ACM},
-  year =     1994,
-  volume =   37,
-  number =   7,
-  pages =    {30-40} -->

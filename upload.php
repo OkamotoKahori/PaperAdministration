@@ -25,7 +25,7 @@
 	    	echo 'location.href = "password.html"';
 	    	echo '// -->';
 	    	echo '</script>';
-		    session_destroy();	//セッション破棄
+		    session_destroy();//セッション破棄
 		  exit;
 		}
 		
@@ -54,25 +54,65 @@
 		$fp = fopen($filename, "a");
 
 		// txtに書き込む項目
+		$genre = htmlspecialchars($_POST['genre']);
 		$title = htmlspecialchars($_POST['title']);
 		$author = htmlspecialchars($_POST['author']);
-		$society = htmlspecialchars($_POST['society']);
+		$journal = htmlspecialchars($_POST['journal']);
 		$select = htmlspecialchars($_POST['select']);
+		$degree = htmlspecialchars($_POST['degree']);
+		$volume = htmlspecialchars($_POST['volume']);
+		$number = htmlspecialchars($_POST['number']);
+		$page = htmlspecialchars($_POST['page']);
 		$year = htmlspecialchars($_POST['year']);
 		$keyword = htmlspecialchars($_POST['keyword']);
 		$category = htmlspecialchars($_POST['category']);
 		$upfile = htmlspecialchars($_POST['upfile']);
 
-		echo "以下の論文をアップロードしました。<br/> 
-		論文タイトル：{$title} <br/> 
-		著者：{$author} <br/> 
-		学会名：{$society}, {$select} <br/>
-		発表年：{$year} <br/>
-		キーワード：{$keyword} <br/>
-		分野：{$category} <br/>
-		ファイル名：{$localFilename}";
-		
-		fwrite($fp, $title.",".$author.",".$society.",".$select.",".$year.",".$keyword.",".$category.",".$localFilename."\n");
+		// たぶんこの辺条件分岐
+		// 編集する必要あり
+
+		if ($genre == 0) {
+		// 学会発表の場合
+			echo "以下の論文をアップロードしました。<br/> 
+			論文タイトル：{$title} <br/> 
+			著者：{$author} <br/> 
+			学会名：{$journal}, {$select} <br/>
+			Volume：{$volume} <br/>
+			Number：{$number} <br/>
+			page：{$page} <br/>
+			発表年：{$year} <br/>
+			キーワード：{$keyword} <br/>
+			分野：{$category} <br/>
+			ファイル名：{$localFilename}";
+			fwrite($fp, $genre.",".$title.",".$author.",".$journal.",".$select.",".$volume.",".$number.",".$page.",".$year.",".$keyword.",".$category.",".$localFilename."\n");
+		}elseif ($genre == 1) {
+		// 論文誌の場合
+			echo "以下の論文をアップロードしました。<br/> 
+			論文タイトル：{$title} <br/> 
+			著者：{$author} <br/> 
+			論文誌：{$journal}, {$select} <br/>
+			Volume：{$volume} <br/>
+			Number：{$number} <br/>
+			page：{$page} <br/>
+			発表年：{$year} <br/>
+			キーワード：{$keyword} <br/>
+			分野：{$category} <br/>
+			ファイル名：{$localFilename}";
+			fwrite($fp, $genre.",".$title.",".$author.",".$journal.",".$select.",".$volume.",".$number.",".$page.",".$year.",".$keyword.",".$category.",".$localFilename."\n");
+		}else{
+		// 学位論文の場合
+			echo "以下の論文をアップロードしました。<br/> 
+			論文タイトル：{$title} <br/> 
+			著者：{$author} <br/> 
+			学位：{$degree} <br/>
+			卒業年度：{$year} 年度<br/>
+			キーワード：{$keyword} <br/>
+			分野：{$category} <br/>
+			ファイル名：{$localFilename}";
+			// 編集する必要あり
+			fwrite($fp, $genre.",".$title.",".$author.",".$degree.",".$year.",".$keyword.",".$category.",".$localFilename."\n");
+		}
+
 		fclose($fp);
 
 		// What's New 用ファイルに設定した件数以上書き込まれていたら古い書き込みを削除する
