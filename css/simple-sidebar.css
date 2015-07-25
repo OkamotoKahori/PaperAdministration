@@ -4,6 +4,7 @@
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+
 /* Toggle Styles */
 
 #wrapper {
@@ -48,6 +49,7 @@
     margin-right: -250px;
 }
 
+
 /* Sidebar Styles */
 
 .sidebar-nav {
@@ -73,7 +75,7 @@
 .sidebar-nav li a:hover {
     text-decoration: none;
     color: #fff;
-    background: rgba(255,255,255,0.2);
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .sidebar-nav li a:active,
@@ -100,26 +102,27 @@
     #wrapper {
         padding-left: 250px;
     }
-
     #wrapper.toggled {
         padding-left: 0;
     }
-
     #sidebar-wrapper {
         width: 250px;
     }
-
     #wrapper.toggled #sidebar-wrapper {
         width: 0;
     }
-
     #page-content-wrapper {
         padding: 20px;
         position: relative;
     }
-
     #wrapper.toggled #page-content-wrapper {
         position: relative;
         margin-right: 0;
     }
+}
+
+h1 {
+    border-bottom: 1px solid #dd0000;
+    margin:0;
+    padding-bottom:5px; 
 }

@@ -21,30 +21,28 @@
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
                 <li class="sidebar-brand">
-                    <a href="PaperAdministration/index.html">
+                    <a href="index.html">
                         論文管理システム
                     </a>
                 </li>
+                <!-- クリックしたらその項目に飛べるようにしたい -->
                 <li>
-                    <a href="all_paper.html">すべて</a>
+                    <a href="#">国内発表</a>
                 </li>
                 <li>
-                    <a href="national.html">国内発表</a>
+                    <a href="#">国際会議</a>
                 </li>
                 <li>
-                    <a href="international.html">国際会議</a>
+                    <a href="#">論文誌</a>
                 </li>
                 <li>
-                    <a href="journal.html">論文誌</a>
+                    <a href="#">学位論文</a>
                 </li>
                 <li>
-                    <a href="thesis.html">学位論文</a>
+                    <a href="#">受賞</a>
                 </li>
                 <li>
-                    <a href="award.html">受賞</a>
-                </li>
-                <li>
-                	<a href="press.html">報道</a>
+                    <a href="#">報道</a>
                 </li>
                 <li>
                     <a href="password.html">論文のアップロード</a>
@@ -55,29 +53,11 @@
         <!-- Page Content -->
         <div id="page-content-wrapper">
             <div class="container-fluid">
-                <h1>What's new!</h1>
-                <p>以下の論文がアップロードされました</p>
-                <div class="WhatsNew">
-                    <p></p>
-                </div>
-                <!-- What's New!用 -->
-                <script type="text/javascript">
-                // テキストファイルを最新のものが上になるように逆順に並べて表示する
-                $(function() {
-                    $.ajax({
-                        url: 'WhatsNew.txt',
-                        success: function(data) {
-                            var data_array = data.split(/\r\n|\r|\n/); //改行コードで分割
-                            var len = data_array.length;
-                            for (var i = len - 1; i >= 0; i--) {
-                                console.log(data_array[i]);
-                                $(".WhatsNew p").append(data_array[i] + "<br />");
-
-                            }
-                        }
-                    });
-                });
-                </script>
+                <h1>国内発表</h1>
+                <h1>国際会議</h1>
+                <h1>論文誌</h1>
+                <h1>学位論文</h1>
+                <h1>受賞・報道</h1>
             </div>
         </div>
         <!-- /#page-content-wrapper -->

@@ -1,25 +1,3 @@
-/*TOPページ*/
-.container {
-    padding-right: 15px;
-    padding-left: 15px;
-    margin-right: auto;
-    margin-left: auto;
-}
-
-.top {
-    height: 100px;
-    background-color: red;
-}
-
-.col-sm-3 {
-    background-color: blue;
-    margin-right: auto;
-    margin-left: auto;
-}
-
-.col-sm-9 {
-    background-color: green;
-}
 /*パスワード認証ページ*/
 /* layout */
 body,p,form,input{margin: 0}
