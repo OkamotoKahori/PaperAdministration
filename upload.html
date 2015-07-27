@@ -10,6 +10,7 @@
 </head>
 
 <body>
+    <a href="/PaperAdministration/"><input type="button" value="戻る"></a>
     <h1>論文のアップロード</h1>
     <form action="upload.php" method="post" enctype="multipart/form-data" accept-charset="utf-8">
         <button type="button" class="btn btn-lg" id="Conference">学会発表</button>
@@ -30,16 +31,20 @@
                 '<p>学会名</p>' +
                 '<input type="text" name="journal">' +
                 '<!-- 国内か国外を選択できるボタン -->' +
-                '<input type="radio" name="select" value="Japan" checked>国内' +
-                '<input type="radio" name="select" value="Outside">国外' +
+                '<input type="radio" name="location" value="Japan" checked>国内' +
+                '<input type="radio" name="location" value="Outside">国外' +
+                '<p>発表形式</p>' +
+                '<input type="radio" name="form" value="0" checked>口頭発表' +
+                '<input type="radio" name="form" value="1">ポスター発表' +
+                '<input type="radio" name="form" value="2">口頭発表＋ポスター発表' +
                 '<p>Vol.</p>' +
                 '<input type="text" name="volume">' +
                 '<p>No.</p>' +
                 '<input type="text" name="number">' +
-                '<p>page</p>' +
-                '<input type="text" name="page">' +
-                '<p>発表年</p>' +
-                '<input type="text" name="year">' +
+                '<p>pages</p>' +
+                '<input type="text" name="pages_s"> 〜 <input type="text" name="pages_e">' +
+                '<p>発表年月</p>' +
+                '<input type="text" name="year">年<input type="text" name="month">月' +
                 '<p>キーワード</p>' +
                 '<input type="text" name="keyword">' +
                 '<p>分野</p>' +
@@ -70,17 +75,16 @@
                 '<p>論文誌名</p>' +
                 '<input type="text" name="journal">' +
                 '<!-- 国内か国外を選択できるボタン -->' +
-                '<input type="radio" name="select" value="Japan" checked>国内' +
-                '<input type="radio" name="select" value="Outside">国外' +
+                '<input type="radio" name="location" value="Japan" checked>国内' +
+                '<input type="radio" name="location" value="Outside">国外' +
                 '<p>Vol.</p>' +
                 '<input type="text" name="volume">' +
                 '<p>No.</p>' +
                 '<input type="text" name="number">' +
                 '<p>page</p>' +
-                '<input type="text" name="page">' +
-                '<p>発表年</p>' +
-                '<input type="text" name="year">' +
-                '<p>キーワード</p>' +
+                '<input type="text" name="pages_s"> 〜 <input type="text" name="pages_e">' +
+                '<p>発行年月</p>' +
+                '<input type="text" name="year">年<input type="text" name="month">月' +                '<p>キーワード</p>' +
                 '<input type="text" name="keyword">' +
                 '<p>分野</p>' +
                 '<select name="category">' +
