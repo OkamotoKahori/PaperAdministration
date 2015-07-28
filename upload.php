@@ -8,7 +8,7 @@
 
 <body>
     <h1>論文のアップロード</h1>
-    <a href="/PaperAdministration/"><input type="button" value="ホーム"></a>
+    <form action="logout.php" method="POST"><input type="submit" value="ホーム"></form>
     <a href="upload.html"><input type="button" value="続けてアップロード"></a>
 	<?php
 		// デバッグ用
@@ -26,7 +26,6 @@
 	    	echo 'location.href = "password.html"';
 	    	echo '// -->';
 	    	echo '</script>';
-		    session_destroy();//セッション破棄
 		  exit;
 		}
 		
@@ -48,9 +47,6 @@
 		function h($string){
 			return htmlspecialchars($string, ENT_QUOTES);
 		}
-
-		// 連想配列用IDの取得
-		$arrayID = date("YmdHis");
 
 		// txtに書き込む項目の変数準備
 		$genre = htmlspecialchars($_POST['genre']);	//学会発表(0)，論文誌(1)，学位論文(2)の分類

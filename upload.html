@@ -10,7 +10,9 @@
 </head>
 
 <body>
-    <a href="/PaperAdministration/"><input type="button" value="戻る"></a>
+    <form action="logout.php" method="POST">
+    <input type="submit" value="戻る">
+    </form>
     <h1>論文のアップロード</h1>
     <form action="upload.php" method="post" enctype="multipart/form-data" accept-charset="utf-8">
         <button type="button" class="btn btn-lg" id="Conference">学会発表</button>
