@@ -48,6 +48,9 @@
 			return htmlspecialchars($string, ENT_QUOTES);
 		}
 
+		// bibtex用IDの取得
+		$bibtexID = date("YmdHis");
+
 		// txtに書き込む項目の変数準備
 		$genre = htmlspecialchars($_POST['genre']);	//学会発表(0)，論文誌(1)，学位論文(2)の分類
 		$title = htmlspecialchars($_POST['title']); //論文のタイトル
@@ -85,7 +88,7 @@
 			キーワード：{$keyword} <br/>
 			分野：{$category} <br/>
 			ファイル名：{$localFilename}";
-			fwrite($fp, "$"."dataArray[] = array(\n"."'genre'"."=>"."'".$genre."',\n"."'title'"."=>"."'".$title."',\n"."'author'"."=>"."'".$author."',\n".	"'journal'"."=>"."'".$journal."',\n"."'location'"."=>"."'".$location."',\n"."'form'"."=>"."'".$form."',\n"."'volume'"."=>"."'".$volume."',\n"."'number'"."=>"."'".$number."',\n"."'pages_s'"."=>"."'".$pages_s."',\n"."'pages_e'"."=>"."'".$pages_e."',\n"."'year'"."=>"."'".$year."',\n"."'month'"."=>"."'".$month."',\n"."'keyword'"."=>"."'".$keyword."',\n"."'category'"."=>"."'".$category."',\n"."'filename'"."=>"."'".$localFilename."');\n");
+			fwrite($fp, "$"."dataArray[] = array(\n"."'genre'"."=>"."'".$genre."',\n"."'bibtexID'"."=>"."'".$bibtexID."',\n"."'title'"."=>"."'".$title."',\n"."'author'"."=>"."'".$author."',\n".	"'journal'"."=>"."'".$journal."',\n"."'location'"."=>"."'".$location."',\n"."'form'"."=>"."'".$form."',\n"."'volume'"."=>"."'".$volume."',\n"."'number'"."=>"."'".$number."',\n"."'pages_s'"."=>"."'".$pages_s."',\n"."'pages_e'"."=>"."'".$pages_e."',\n"."'year'"."=>"."'".$year."',\n"."'month'"."=>"."'".$month."',\n"."'keyword'"."=>"."'".$keyword."',\n"."'category'"."=>"."'".$category."',\n"."'filename'"."=>"."'".$localFilename."');\n");
 		}elseif ($genre == 1) {
 		// 論文誌の場合
 			echo "以下の論文をアップロードしました。<br/> 
@@ -99,7 +102,7 @@
 			キーワード：{$keyword} <br/>
 			分野：{$category} <br/>
 			ファイル名：{$localFilename}";
-			fwrite($fp, "$"."dataArray[] = array(\n"."'genre'"."=>"."'".$genre."',\n"."'title'"."=>"."'".$title."',\n"."'author'"."=>"."'".$author."',\n".	"'journal'"."=>"."'".$journal."',\n"."'location'"."=>"."'".$location."',\n"."'volume'"."=>"."'".$volume."',\n"."'number'"."=>"."'".$number."',\n"."'pages_s'"."=>"."'".$pages_s."',\n"."'pages_s'"."=>"."'".$pages_s."',\n"."'year'"."=>"."'".$year."',\n"."'month'"."=>"."'".$month."',\n"."'keyword'"."=>"."'".$keyword."',\n"."'category'"."=>"."'".$category."',\n"."'filename'"."=>"."'".$localFilename."');\n");
+			fwrite($fp, "$"."dataArray[] = array(\n"."'genre'"."=>"."'".$genre."',\n"."'bibtexID'"."=>"."'".$bibtexID."',\n"."'title'"."=>"."'".$title."',\n"."'author'"."=>"."'".$author."',\n".	"'journal'"."=>"."'".$journal."',\n"."'location'"."=>"."'".$location."',\n"."'volume'"."=>"."'".$volume."',\n"."'number'"."=>"."'".$number."',\n"."'pages_s'"."=>"."'".$pages_s."',\n"."'pages_s'"."=>"."'".$pages_s."',\n"."'year'"."=>"."'".$year."',\n"."'month'"."=>"."'".$month."',\n"."'keyword'"."=>"."'".$keyword."',\n"."'category'"."=>"."'".$category."',\n"."'filename'"."=>"."'".$localFilename."');\n");
 		}else{
 		// 学位論文の場合
 			echo "以下の論文をアップロードしました。<br/> 
@@ -110,7 +113,7 @@
 			キーワード：{$keyword} <br/>
 			分野：{$category} <br/>
 			ファイル名：{$localFilename}";
-			fwrite($fp, "$"."dataArray[] = array(\n"."'genre'"."=>"."'".$genre."',\n"."'title'"."=>"."'".$title."',\n"."'author'"."=>"."'".$author."',\n".	"'degree'"."=>"."'".$degree."',\n"."'year'"."=>"."'".$year."',\n"."'keyword'"."=>"."'".$keyword."',\n"."'category'"."=>"."'".$category."',\n"."'filename'"."=>"."'".$localFilename."');\n");
+			fwrite($fp, "$"."dataArray[] = array(\n"."'genre'"."=>"."'".$genre."',\n"."'bibtexID'"."=>"."'".$bibtexID."',\n"."'title'"."=>"."'".$title."',\n"."'author'"."=>"."'".$author."',\n".	"'degree'"."=>"."'".$degree."',\n"."'year'"."=>"."'".$year."',\n"."'keyword'"."=>"."'".$keyword."',\n"."'category'"."=>"."'".$category."',\n"."'filename'"."=>"."'".$localFilename."');\n");
 		}
 
 		fclose($fp);
