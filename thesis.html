@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" constent="text/html; charset=UTF-8" />
+    <script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/simple-sidebar.css" rel="stylesheet">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>PHP入門</title>
+</head>
+
+<body>
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="/PaperAdministration/">
+                        論文管理システム
+                    </a>
+                </li>
+                <li>
+                    <a href="#smoothplay1">博士論文</a>
+                </li>
+                <li>
+                    <a href="#smoothplay2">修士論文</a>
+                </li>
+                <li>
+                    <a href="#smoothplay3">学士論文</a>
+                </li>
+                <li>
+                    <a href="#">年代順</a>
+                </li>
+                <li>
+                    <a href="password.html">論文のアップロード</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <h1><div id="smoothplay1">博士論文</div></h1>
+                <h1><div id="smoothplay2">修士論文</div></h1>
+                <h1><div id="smoothplay3">学士論文</div></h1>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- Menu Toggle Script -->
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    </script>
+</body>
+
+</html>

@@ -8,7 +8,8 @@
 
 <body>
     <h1>論文のアップロード</h1>
-
+    <form action="logout.php" method="POST"><input type="submit" value="ホーム"></form>
+    <a href="upload.html"><input type="button" value="続けてアップロード"></a>
 	<?php
 		// デバッグ用
 		// ini_set("display_errors", On);
@@ -25,7 +26,6 @@
 	    	echo 'location.href = "password.html"';
 	    	echo '// -->';
 	    	echo '</script>';
-		    session_destroy();	//セッション破棄
 		  exit;
 		}
 		
@@ -37,56 +37,98 @@
 		// 保存先のディレクトリ
 		$dir = 'PaperFiles/';
 
-
+		// pdfファイルがアップロードされたか判定
 		if (move_uploaded_file($temp, $dir . $localFilename)) {
-	 		echo '<p>アップロードされたファイルです:' . h($localFilename) . '</p>';
+	 		echo '<p>アップロード完了:' . h($localFilename) . '</p>';
 		}else{
-			echo '<p>アップロードされていないファイルです:' . h($localFilename) . '</p>';
+			echo '<p>アップロード失敗:' . h($localFilename) . '</p>';
 		}
 
 		function h($string){
 			return htmlspecialchars($string, ENT_QUOTES);
 		}
 
-		// 入力した項目を保存する
+		// bibtex用IDの取得
+		$bibtexID = date("YmdHis");
+
+		// txtに書き込む項目の変数準備
+		$genre = htmlspecialchars($_POST['genre']);	//学会発表(0)，論文誌(1)，学位論文(2)の分類
+		$title = htmlspecialchars($_POST['title']); //論文のタイトル
+		$author = htmlspecialchars($_POST['author']); //著者名
+		$journal = htmlspecialchars($_POST['journal']); //学会発表：学会名，論文誌：論文誌名
+		$location = htmlspecialchars($_POST['location']); //国内(Japan)か海外(Outside)か
+		$form = htmlspecialchars($_POST['form']); //発表形態
+		$degree = htmlspecialchars($_POST['degree']); //学位
+		$volume = htmlspecialchars($_POST['volume']); //volume
+		$number = htmlspecialchars($_POST['number']); //number
+		$pages_s = htmlspecialchars($_POST['pages_s']); //ページ始まり
+		$pages_e = htmlspecialchars($_POST['pages_e']); //ページ終わり
+		$year = htmlspecialchars($_POST['year']); //年
+		$month = htmlspecialchars($_POST['month']); //月
+		$keyword = htmlspecialchars($_POST['keyword']); //論文を示すキーワード
+		$category = htmlspecialchars($_POST['category']); //研究分野カテゴリ
+		$upfile = htmlspecialchars($_POST['upfile']); //アップロードしたpdf名
+
+		// 入力した項目をデータベースに保存する
 		$filename = "database.txt";
 		chmod($filename, 0766);
 		$fp = fopen($filename, "a");
 
-		// txtに書き込む項目
-		$title = htmlspecialchars($_POST['title']);
-		$author = htmlspecialchars($_POST['author']);
-		$society = htmlspecialchars($_POST['society']);
-		$select = htmlspecialchars($_POST['select']);
-		$year = htmlspecialchars($_POST['year']);
-		$keyword = htmlspecialchars($_POST['keyword']);
-		$category = htmlspecialchars($_POST['category']);
-		$upfile = htmlspecialchars($_POST['upfile']);
+		if ($genre == 0) {
+		// 学会発表の場合
+			echo "以下の論文をアップロードしました。<br/> 
+			論文タイトル：{$title} <br/> 
+			著者：{$author} <br/> 
+			学会名：{$journal}, {$location} <br/>
+			発表形態：{$form} <br/>
+			Volume：{$volume} <br/>
+			Number：{$number} <br/>
+			pages：{$pages_s} - {$pages_e} <br/>
+			発表年月：{$year} 年 {$month} 月 <br/>
+			キーワード：{$keyword} <br/>
+			分野：{$category} <br/>
+			ファイル名：{$localFilename}";
+			fwrite($fp, "$"."dataArray[] = array(\n"."'genre'"."=>"."'".$genre."',\n"."'bibtexID'"."=>"."'".$bibtexID."',\n"."'title'"."=>"."'".$title."',\n"."'author'"."=>"."'".$author."',\n".	"'journal'"."=>"."'".$journal."',\n"."'location'"."=>"."'".$location."',\n"."'form'"."=>"."'".$form."',\n"."'volume'"."=>"."'".$volume."',\n"."'number'"."=>"."'".$number."',\n"."'pages_s'"."=>"."'".$pages_s."',\n"."'pages_e'"."=>"."'".$pages_e."',\n"."'year'"."=>"."'".$year."',\n"."'month'"."=>"."'".$month."',\n"."'keyword'"."=>"."'".$keyword."',\n"."'category'"."=>"."'".$category."',\n"."'filename'"."=>"."'".$localFilename."');\n");
+		}elseif ($genre == 1) {
+		// 論文誌の場合
+			echo "以下の論文をアップロードしました。<br/> 
+			論文タイトル：{$title} <br/> 
+			著者：{$author} <br/> 
+			論文誌：{$journal}, {$location} <br/>
+			Volume：{$volume} <br/>
+			Number：{$number} <br/>
+			pages：{$pages_s} - {$pages_e} <br/>
+			発行年月：{$year} 年 {$month} 月 <br/>
+			キーワード：{$keyword} <br/>
+			分野：{$category} <br/>
+			ファイル名：{$localFilename}";
+			fwrite($fp, "$"."dataArray[] = array(\n"."'genre'"."=>"."'".$genre."',\n"."'bibtexID'"."=>"."'".$bibtexID."',\n"."'title'"."=>"."'".$title."',\n"."'author'"."=>"."'".$author."',\n".	"'journal'"."=>"."'".$journal."',\n"."'location'"."=>"."'".$location."',\n"."'volume'"."=>"."'".$volume."',\n"."'number'"."=>"."'".$number."',\n"."'pages_s'"."=>"."'".$pages_s."',\n"."'pages_s'"."=>"."'".$pages_s."',\n"."'year'"."=>"."'".$year."',\n"."'month'"."=>"."'".$month."',\n"."'keyword'"."=>"."'".$keyword."',\n"."'category'"."=>"."'".$category."',\n"."'filename'"."=>"."'".$localFilename."');\n");
+		}else{
+		// 学位論文の場合
+			echo "以下の論文をアップロードしました。<br/> 
+			論文タイトル：{$title} <br/> 
+			著者：{$author} <br/> 
+			学位：{$degree} <br/>
+			卒業年度：{$year} 年度<br/>
+			キーワード：{$keyword} <br/>
+			分野：{$category} <br/>
+			ファイル名：{$localFilename}";
+			fwrite($fp, "$"."dataArray[] = array(\n"."'genre'"."=>"."'".$genre."',\n"."'bibtexID'"."=>"."'".$bibtexID."',\n"."'title'"."=>"."'".$title."',\n"."'author'"."=>"."'".$author."',\n".	"'degree'"."=>"."'".$degree."',\n"."'year'"."=>"."'".$year."',\n"."'keyword'"."=>"."'".$keyword."',\n"."'category'"."=>"."'".$category."',\n"."'filename'"."=>"."'".$localFilename."');\n");
+		}
 
-		echo "以下の論文をアップロードしました。<br/> 
-		論文タイトル：{$title} <br/> 
-		著者：{$author} <br/> 
-		学会名：{$society}, {$select} <br/>
-		発表年：{$year} <br/>
-		キーワード：{$keyword} <br/>
-		分野：{$category} <br/>
-		ファイル名：{$localFilename}";
-		
-		fwrite($fp, $title.",".$author.",".$society.",".$select.",".$year.",".$keyword.",".$category.",".$localFilename."\n");
 		fclose($fp);
 
 		// What's New 用ファイルに設定した件数以上書き込まれていたら古い書き込みを削除する
-		$file   = file('WhatsNew.txt');
+		$WNfilename ="WhatsNew.txt";
+		chmod($WNfilename, 0766);
+		$file   = file($WNfilename); // ファイルの中身を一行ずつ配列に格納
 		$fileCount = count($file);
-		$settingNum = 4;	//What's New!に表示したい件数 - 1 の数字を指定
+		$settingNum = 9;	//What's New!に表示したい件数 - 1 の数字を指定
 		if ($fileCount > $settingNum){
 			unset($file[0]);
-			file_put_contents('WhatsNew.txt', $file);
+			file_put_contents($WNfilename, $file);
 		};
-
-		//What's New 用ファイルに新しく追加した論文のタイトルと時刻を書き込む
-		$WNfilename = "WhatsNew.txt";
-		chmod($WNfilename, 0766);
+		//What's New 用ファイルに新しく追加した論文のタイトルと日時を書き込む
 		$WNfp = fopen($WNfilename, "a");
 		fwrite($WNfp, date('Y年m月d日')."\t".$title."\n");
 		fclose($WNfp);
