@@ -124,7 +124,7 @@
 		chmod($WNfilename, 0766);
 		$file   = file($WNfilename); // ファイルの中身を一行ずつ配列に格納
 		$fileCount = count($file);
-		$settingNum = 4;	//What's New!に表示したい件数 - 1 の数字を指定
+		$settingNum = 9;	//What's New!に表示したい件数 - 1 の数字を指定
 		if ($fileCount > $settingNum){
 			unset($file[0]);
 			file_put_contents($WNfilename, $file);
