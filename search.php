@@ -36,7 +36,7 @@ foreach ($dataSet as $data) {
         $lap = result($paperArray,$query_value,$lap);
     }
     //論文が見つからないとき
-    if($notPaper==$datalength){
+    if($notPaper==$datalength+1){
         echo "お探しの論文はみつかりませんでした";
     }
 }
