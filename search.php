@@ -66,27 +66,20 @@
         <!--
         <div id="page-content-wrapper">
             <div class="container-fluid">
-                <div id="bibtexID"></div>
-                <div id="title"></div>
-                <div id="author"></div>
-                <div id="year"></div>
-                <div id="keyword"></div>
-                <div id="category"></div>
+                ここに検索結果が表示されます
             </div>
         </div>
         -->
-        <!-- /#page-content-wrapper -->
-
 
 <?php
 //echo "phpの読み込みはできています"."<br />";
 $filename = "database.txt";
 $data = file_get_contents($filename);
-//var_dump($data);
-//入力された情報
+//入力された情報を取得
 $query_value = htmlspecialchars($_POST['query']);
 $refine = htmlspecialchars($_POST['refine']);
 $query_category = htmlspecialchars($_POST['category']);
+//htmlから渡された値をphpで使えるように変更
 if($refine == 's_author'){
     $query_key = 'author';
 }elseif($refine == 's_keyword'){
@@ -96,27 +89,23 @@ if($refine == 's_author'){
 }
 
 //database.texに含まれるデータの個数を数える
-$datalength = substr_count($data, "paper");
-
-//echo "これから'paper[] => 'で切断していきます"."<br />";
-//$dataArray[0]が空になりますので，[1]から使ってください
-$cut = '$paper[] => ';
-$dataSet = explode($cut, $data);
+$datalength = substr_count($data, "array");
+//echo "これからdatabaseを1行ずつ配列に格納していきます"."<br />";
+$dataSet = explode("\n", $data);
 
 //一人前ずつのデータを取り出します
 //echo "これから配列を取り出します"."<br />";
 foreach ($dataSet as $data) {
     //文字列をphpのソースとして読めるようにしています
     eval('$paperArray = '.$data.';');
-
     //入力された文字列でデータベース内を検索
     if(strpos($paperArray[$query_key], $query_value) === FALSE){
         $notPaper++;
     }else{
-        $lap = result_2($paperArray,$query_value,$lap);
+        $lap = result($paperArray,$query_value,$lap);
     }
     //論文が見つからないとき
-    if($notPaper==$datalength+1){
+    if($notPaper==$datalength){
         print('<h1>お探しの論文はみつかりませんでした</h1>');
     }
 }
@@ -126,37 +115,49 @@ $r = "緑";
 $key = array_search($r, $Array);
 echo $key;
 */
-function result_2($paper,$query,$lap){
+function result($paper,$query,$lap){
     if($paper['title']!=$lap){
+        //検索結果の表示に使うhtmlタグ
         print('<div id="page-content-wrapper">');
         print('<div class="container-fluid">');
-        print('<h1>'.$paper['bibtexID'].'</h1>');
-        print('<h1>'.$paper['title'].'</h1>');
-        print('<h1>'.$paper['author'].'</h1>');
-        print('<h1>'.$paper['year'].'</h1>');
-        print('<h1>'.$paper['keyword'].'</h1>');
-        print('<h1>'.$paper['category'].'</h1>');
-            //    <h1>遷移</h1>
-            //    <h1>したくない</h1>
+        //ジャンルに問わず表示する内容
+        //print('<h1>'.$paper['bibtexID'].'</h1>');
+        print('<li>論文タイトル：</li>');
+        print('<h2>'.$paper['title'].'</h2>');
+        print('<li>著者名：'.$paper['author'].'</li>');
+        if($paper['genre']==2){
+            //修論・卒論
+            print('<li>発表年：'.$paper['year'].'</li>');
+        }else{
+            //学会発表・国際会議
+            if($paper['genre']==0){
+                print('<li>学会名：'.$paper['journal'].'</li>');
+            }else{
+                print('<li>論文誌名：'.$paper['journal'].'</li>');
+            }
+            print('<li>場所：'.$paper['location'].'</li>');
+            print('<li>発表形態：'.$paper['form'].'</li>');
+            print('<li>学位：'.$paper['degree'].'</li>');
+            print('<li>Vol.：'.$paper['volume'].'</li>');
+            print('<li>No.：'.$paper['number'].'</li>');
+            print('<li>pp.：'.$paper['pages_s']."-".$paper['pages_e'].'</li>');
+            print('<li>発表年：'.$paper['year'].'</li>');
+            print('<li>発表月：'.$paper['month'].'</li>');
+        }
+        //ジャンルに問わず表示する内容
+        print('<li>キーワード：'.$paper['keyword'].'</li>');
+        print('<li>研究分野：'.$paper['category'].'</li>');
+        print('<li>PDFファイル：'.$paper['filename'].'</li>');
         print('</div>');
         print('</div>');
-        /*
-        echo "<br />「{$query}」でお探しの論文が見つかりました<br/>
-        bibtexID：{$paper['bibtexID']} <br/>
-        論文タイトル：{$paper['title']} <br/>
-        著者名：{$paper['author']} <br/>
-        発表年：{$paper['year']} <br/>
-        キーワード：{$paper['keyword']} <br/>
-        分野：{$paper['category']}<br/>";
-        */
     }else{
         echo "<br />「{$query}」でお探しの論文は上記のいずれかの論文であると思われますです<br/>";
     }
     return($paper['title']);
 }
 ?>
-
     </div>
+    <!-- /#page-content-wrapper -->
     <!-- /#wrapper -->
     <!-- jQuery -->
     <script src="js/jquery.js"></script>
