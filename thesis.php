@@ -1,3 +1,8 @@
+<?php
+
+?>
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -47,8 +52,17 @@
         <div id="page-content-wrapper">
             <div class="container-fluid">
                 <h1><div id="smoothplay1">博士論文</div></h1>
+                <div class="PhD">
+                    <p></p>
+                </div>
                 <h1><div id="smoothplay2">修士論文</div></h1>
+                <div class="Master">
+                    <p></p>
+                </div>
                 <h1><div id="smoothplay3">学士論文</div></h1>
+                <div class="Bachelor">
+                    <p></p>
+                </div>
             </div>
         </div>
         <!-- /#page-content-wrapper -->
