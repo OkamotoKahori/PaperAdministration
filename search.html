@@ -8,7 +8,6 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="css/simple-sidebar.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="main.css">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
@@ -25,35 +24,11 @@
                     <a href="/PaperAdministration/">
                         論文管理システム
                     </a>
-                </li>
                 <li>
                     <a href="all_paper.html">すべて</a>
                 </li>
-                <li>
-                    <a href="national.html">国内発表</a>
-                </li>
-                <li>
-                    <a href="international.html">国際会議</a>
-                </li>
-                <li>
-                    <a href="journal.html">論文誌</a>
-                </li>
-                <li>
-                    <a href="thesis.html">学位論文</a>
-                </li>
-                <li>
-                    <a href="award.html">受賞</a>
-                </li>
-                <li>
-                    <a href="press.html">報道</a>
-                </li>
-                <!--
-                <li>
-                    <a href="search.html">検索</a>
-                </li>
-                -->
                 <div class="space"></div>
-                <form action="search.php" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+                <form action="search.php" method="post" onsubmit="doSomething(); return false;" enctype="multipart/form-data" accept-charset="utf-8">
                     <p>
                         <font color="white">絞り込み検索</font>
                     </p>
@@ -90,33 +65,14 @@
         <!-- Page Content -->
         <div id="page-content-wrapper">
             <div class="container-fluid">
-                <h1>What's new!</h1>
-                <p>以下の論文がアップロードされました</p>
-                <div class="WhatsNew">
-                    <p></p>
-                </div>
-                <!-- What's New!用 -->
-                <script type="text/javascript">
-                // テキストファイルを最新のものが上になるように逆順に並べて表示する
-                $(function() {
-                    $.ajax({
-                        url: 'WhatsNew.txt',
-                        success: function(data) {
-                            var data_array = data.split(/\r\n|\r|\n/); //改行コードで分割
-                            var len = data_array.length;
-                            for (var i = len - 1; i >= 0; i--) {
-                                console.log(data_array[i]);
-                                $(".WhatsNew p").append(data_array[i] + "<br />");
-
-                            }
-                        }
-                    });
-                });
-                </script>
+                <h1>ページ</h1>
+                <h1>遷移</h1>
+                <h1>したくない</h1>
             </div>
         </div>
         <!-- /#page-content-wrapper -->
     </div>
+
     <!-- /#wrapper -->
     <!-- jQuery -->
     <script src="js/jquery.js"></script>
