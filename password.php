@@ -18,7 +18,7 @@
 
 			// 管理者専用画面へリダイレクト
 			// http://{$_SERVER["HTTP_HOST"]}/PaperAdministration/upload.php
-			$login_url = "upload.html";
+			$login_url = "upload.php";
 			header("Location: {$login_url}");
 			exit;
 		}

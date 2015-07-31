@@ -1,139 +1,163 @@
+<?php
+        // デバッグ用
+        // ini_set("display_errors", On);
+        // error_reporting(E_ALL);
+        // 正規ルートでページに遷移したか確認
+        session_start();
+
+        // ログイン状態のチェック
+        if (!isset($_SESSION["USERID"])) {
+            echo '<script type = "text/javascript">';
+            echo "<!--\n";
+            echo 'alert("パスワードを認証してください");' ."\n";
+            // メッセージボックスでOKを押したら入力フォームへ戻る
+            echo 'location.href = "password.html"';
+            echo '// -->';
+            echo '</script>';
+          exit;
+        }
+?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta http-equiv="Content-Type" constent="text/html; charset=UTF-8" />
     <title>論文のアップロード</title>
+    <script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
+    <form action="logout.php" method="POST">
+    <input type="submit" value="戻る">
+    </form>
     <h1>論文のアップロード</h1>
-    <form action="logout.php" method="POST"><input type="submit" value="ホーム"></form>
-    <a href="upload.html"><input type="button" value="続けてアップロード"></a>
-	<?php
-		// デバッグ用
-		// ini_set("display_errors", On);
-		// error_reporting(E_ALL);
-		// 正規ルートでページに遷移したか確認
-		session_start();
+    <form action="upload.php" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+        <button type="button" class="btn btn-lg" id="Conference">学会発表</button>
+        <button type="button" class="btn btn-lg" id="Journal">論文誌</button>
+        <button type="button" class="btn btn-lg" id="Thesis">学位論文</button>
+        <div id="main"></div>
+        <!-- アップロード論文の種類の選択 -->
+        <script type="text/javascript">
+        // 学会発表を選択した時
+        $('#Conference').on('click', function() {
+            $('#main').empty();
+            $('#main').append(
+                '<input type="hidden" name="genre" value="0">'+
+                '<p>論文タイトル</p>' +
+                '<input type="text" name="title">' +
+                '<p>著者名</p>' +
+                '<input type="text" name="author">' +
+                '<p>学会名</p>' +
+                '<input type="text" name="journal">' +
+                '<!-- 国内か国外を選択できるボタン -->' +
+                '<input type="radio" name="location" value="Japan" checked>国内' +
+                '<input type="radio" name="location" value="Outside">国外' +
+                '<p>発表形式</p>' +
+                '<input type="radio" name="form" value="0" checked>口頭発表' +
+                '<input type="radio" name="form" value="1">ポスター発表' +
+                '<input type="radio" name="form" value="2">口頭発表＋ポスター発表' +
+                '<p>Vol.</p>' +
+                '<input type="text" name="volume">' +
+                '<p>No.</p>' +
+                '<input type="text" name="number">' +
+                '<p>pages</p>' +
+                '<input type="text" name="pages_s"> 〜 <input type="text" name="pages_e">' +
+                '<p>発表年月</p>' +
+                '<input type="text" name="year">年<input type="text" name="month">月' +
+                '<p>キーワード</p>' +
+                '<input type="text" name="keyword">' +
+                '<p>分野</p>' +
+                '<select name="category">' +
+                '    <option value="Real">実世界</option>' +
+                '    <option value="Communication">コミュニケーション</option>' +
+                '    <option value="Gimmick">仕掛け学</option>' +
+                '    <option value="InformationCompiled">情報編纂</option>' +
+                '    <option value="Comic">コミック工学</option>' +
+                '    <option value="Onomatopoeia">オノマトペ</option>' +
+                '</select>' +
+                '<p>論文ファイル</p>' +
+                '<input type="file" name="upfile" value="">' +
+                '<p>' +
+                '<input type="submit" value="送信">' +
+                '</p>');
 
-		// ログイン状態のチェック
-		if (!isset($_SESSION["USERID"])) {
-			echo '<script type = "text/javascript">';
-	    	echo "<!--\n";
-	    	echo 'alert("パスワードを認証してください");' ."\n";
-	   		// メッセージボックスでOKを押したら入力フォームへ戻る
-	    	echo 'location.href = "password.html"';
-	    	echo '// -->';
-	    	echo '</script>';
-		  exit;
-		}
-		
-		// ファイルのアップロード
-		// ファイル名の取り出し
-		$localFilename = $_FILES['upfile']['name'];
-		//一時ファイル名の取り出し 
-		$temp = $_FILES['upfile']['tmp_name'];
-		// 保存先のディレクトリ
-		$dir = 'PaperFiles/';
+        });
+        //論文誌を選択した時 
+        $('#Journal').on('click', function() {
+            $('#main').empty();
+            $('#main').append(
+                '<input type="hidden" name="genre" value="1">'+
+                '<p>論文タイトル</p>' +
+                '<input type="text" name="title">' +
+                '<p>著者名</p>' +
+                '<input type="text" name="author">' +
+                '<p>論文誌名</p>' +
+                '<input type="text" name="journal">' +
+                '<!-- 国内か国外を選択できるボタン -->' +
+                '<input type="radio" name="location" value="Japan" checked>国内' +
+                '<input type="radio" name="location" value="Outside">国外' +
+                '<p>Vol.</p>' +
+                '<input type="text" name="volume">' +
+                '<p>No.</p>' +
+                '<input type="text" name="number">' +
+                '<p>page</p>' +
+                '<input type="text" name="pages_s"> 〜 <input type="text" name="pages_e">' +
+                '<p>発行年月</p>' +
+                '<input type="text" name="year">年<input type="text" name="month">月' +                '<p>キーワード</p>' +
+                '<input type="text" name="keyword">' +
+                '<p>分野</p>' +
+                '<select name="category">' +
+                '    <option value="Real">実世界</option>' +
+                '    <option value="Communication">コミュニケーション</option>' +
+                '    <option value="Gimmick">仕掛け学</option>' +
+                '    <option value="InformationCompiled">情報編纂</option>' +
+                '    <option value="Comic">コミック工学</option>' +
+                '    <option value="Onomatopoeia">オノマトペ</option>' +
+                '</select>' +
+                '<p>論文ファイル</p>' +
+                '<input type="file" name="upfile" value="">' +
+                '<p>' +
+                '<input type="submit" value="送信">' +
+                '</p>');
 
-		// pdfファイルがアップロードされたか判定
-		if (move_uploaded_file($temp, $dir . $localFilename)) {
-	 		echo '<p>アップロード完了:' . h($localFilename) . '</p>';
-		}else{
-			echo '<p>アップロード失敗:' . h($localFilename) . '</p>';
-		}
+        });
+        //学位論文を選択した時    
+        $('#Thesis').on('click', function() {
+            $('#main').empty();
+            $('#main').append(
+                '<input type="hidden" name="genre" value="2">'+
+                '<p>論文タイトル</p>' +
+                '<input type="text" name="title">' +
+                '<p>著者名</p>' +
+                '<input type="text" name="author">' +
+                '<p>学位の選択</p>' +
+                '<input type="radio" name="degree" value="Bachelor" checked>学士' +
+                '<input type="radio" name="degree" value="Master">修士' +
+                '<input type="radio" name="degree" value="PhD">博士' +
+                '<p>卒業年度</p>' +
+                '<p>西暦<input type="text" name="year">年度</p>' +
+                '<p>キーワード</p>' +
+                '<input type="text" name="keyword">' +
+                '<p>分野</p>' +
+                '<select name="category">' +
+                '    <option value="Real">実世界</option>' +
+                '    <option value="Communication">コミュニケーション</option>' +
+                '    <option value="Gimmick">仕掛け学</option>' +
+                '    <option value="InformationCompiled">情報編纂</option>' +
+                '   <option value="Comic">コミック工学</option>' +
+                '    <option value="Onomatopoeia">オノマトペ</option>' +
+                '</select>' +
+                '<p>論文ファイル</p>' +
+                '<input type="file" name="upfile" value="">' +
+                '<p>' +
+                '    <input type="submit" value="送信"></p>');
 
-		function h($string){
-			return htmlspecialchars($string, ENT_QUOTES);
-		}
-
-		// bibtex用IDの取得
-		$bibtexID = date("YmdHis");
-
-		// txtに書き込む項目の変数準備
-		$genre = htmlspecialchars($_POST['genre']);	//学会発表(0)，論文誌(1)，学位論文(2)の分類
-		$title = htmlspecialchars($_POST['title']); //論文のタイトル
-		$author = htmlspecialchars($_POST['author']); //著者名
-		$journal = htmlspecialchars($_POST['journal']); //学会発表：学会名，論文誌：論文誌名
-		$location = htmlspecialchars($_POST['location']); //国内(Japan)か海外(Outside)か
-		$form = htmlspecialchars($_POST['form']); //発表形態
-		$degree = htmlspecialchars($_POST['degree']); //学位
-		$volume = htmlspecialchars($_POST['volume']); //volume
-		$number = htmlspecialchars($_POST['number']); //number
-		$pages_s = htmlspecialchars($_POST['pages_s']); //ページ始まり
-		$pages_e = htmlspecialchars($_POST['pages_e']); //ページ終わり
-		$year = htmlspecialchars($_POST['year']); //年
-		$month = htmlspecialchars($_POST['month']); //月
-		$keyword = htmlspecialchars($_POST['keyword']); //論文を示すキーワード
-		$category = htmlspecialchars($_POST['category']); //研究分野カテゴリ
-		$upfile = htmlspecialchars($_POST['upfile']); //アップロードしたpdf名
-
-		// 入力した項目をデータベースに保存する
-		$filename = "database.txt";
-		chmod($filename, 0766);
-		$fp = fopen($filename, "a");
-
-		if ($genre == 0) {
-		// 学会発表の場合
-			echo "以下の論文をアップロードしました。<br/> 
-			論文タイトル：{$title} <br/> 
-			著者：{$author} <br/> 
-			学会名：{$journal}, {$location} <br/>
-			発表形態：{$form} <br/>
-			Volume：{$volume} <br/>
-			Number：{$number} <br/>
-			pages：{$pages_s} - {$pages_e} <br/>
-			発表年月：{$year} 年 {$month} 月 <br/>
-			キーワード：{$keyword} <br/>
-			分野：{$category} <br/>
-			ファイル名：{$localFilename}";
-			fwrite($fp, "$"."paper[] = array(\n"."'genre'"."=>"."'".$genre."',\n"."'bibtexID'"."=>"."'".$bibtexID."',\n"."'title'"."=>"."'".$title."',\n"."'author'"."=>"."'".$author."',\n".	"'journal'"."=>"."'".$journal."',\n"."'location'"."=>"."'".$location."',\n"."'form'"."=>"."'".$form."',\n"."'volume'"."=>"."'".$volume."',\n"."'number'"."=>"."'".$number."',\n"."'pages_s'"."=>"."'".$pages_s."',\n"."'pages_e'"."=>"."'".$pages_e."',\n"."'year'"."=>"."'".$year."',\n"."'month'"."=>"."'".$month."',\n"."'keyword'"."=>"."'".$keyword."',\n"."'category'"."=>"."'".$category."',\n"."'filename'"."=>"."'".$localFilename."');\n");
-		}elseif ($genre == 1) {
-		// 論文誌の場合
-			echo "以下の論文をアップロードしました。<br/> 
-			論文タイトル：{$title} <br/> 
-			著者：{$author} <br/> 
-			論文誌：{$journal}, {$location} <br/>
-			Volume：{$volume} <br/>
-			Number：{$number} <br/>
-			pages：{$pages_s} - {$pages_e} <br/>
-			発行年月：{$year} 年 {$month} 月 <br/>
-			キーワード：{$keyword} <br/>
-			分野：{$category} <br/>
-			ファイル名：{$localFilename}";
-			fwrite($fp, "$"."paper[] = array(\n"."'genre'"."=>"."'".$genre."',\n"."'bibtexID'"."=>"."'".$bibtexID."',\n"."'title'"."=>"."'".$title."',\n"."'author'"."=>"."'".$author."',\n".	"'journal'"."=>"."'".$journal."',\n"."'location'"."=>"."'".$location."',\n"."'volume'"."=>"."'".$volume."',\n"."'number'"."=>"."'".$number."',\n"."'pages_s'"."=>"."'".$pages_s."',\n"."'pages_s'"."=>"."'".$pages_s."',\n"."'year'"."=>"."'".$year."',\n"."'month'"."=>"."'".$month."',\n"."'keyword'"."=>"."'".$keyword."',\n"."'category'"."=>"."'".$category."',\n"."'filename'"."=>"."'".$localFilename."');\n");
-		}else{
-		// 学位論文の場合
-			echo "以下の論文をアップロードしました。<br/> 
-			論文タイトル：{$title} <br/> 
-			著者：{$author} <br/> 
-			学位：{$degree} <br/>
-			卒業年度：{$year} 年度<br/>
-			キーワード：{$keyword} <br/>
-			分野：{$category} <br/>
-			ファイル名：{$localFilename}";
-			fwrite($fp, "$"."paper[] = array(\n"."'genre'"."=>"."'".$genre."',\n"."'bibtexID'"."=>"."'".$bibtexID."',\n"."'title'"."=>"."'".$title."',\n"."'author'"."=>"."'".$author."',\n".	"'degree'"."=>"."'".$degree."',\n"."'year'"."=>"."'".$year."',\n"."'keyword'"."=>"."'".$keyword."',\n"."'category'"."=>"."'".$category."',\n"."'filename'"."=>"."'".$localFilename."');\n");
-		}
-
-		fclose($fp);
-
-		// What's New 用ファイルに設定した件数以上書き込まれていたら古い書き込みを削除する
-		$WNfilename ="WhatsNew.txt";
-		chmod($WNfilename, 0766);
-		$file   = file($WNfilename); // ファイルの中身を一行ずつ配列に格納
-		$fileCount = count($file);
-		$settingNum = 9;	//What's New!に表示したい件数 - 1 の数字を指定
-		if ($fileCount > $settingNum){
-			unset($file[0]);
-			file_put_contents($WNfilename, $file);
-		};
-		//What's New 用ファイルに新しく追加した論文のタイトルと日時を書き込む
-		$WNfp = fopen($WNfilename, "a");
-		fwrite($WNfp, date('Y年m月d日')."\t".$title."\n");
-		fclose($WNfp);
-	?>
-
+        });
+        </script>
+    </form>
 </body>
 
 </html>
