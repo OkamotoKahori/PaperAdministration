@@ -161,7 +161,6 @@
 </body>
 
 </html>
-       });
         </script>
     </form>
 </body>
