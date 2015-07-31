@@ -34,7 +34,7 @@
     <input type="submit" value="戻る">
     </form>
     <h1>論文のアップロード</h1>
-    <form action="upload.php" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+    <form action="uploaded.php" method="post" enctype="multipart/form-data" accept-charset="utf-8">
         <button type="button" class="btn btn-lg" id="Conference">学会発表</button>
         <button type="button" class="btn btn-lg" id="Journal">論文誌</button>
         <button type="button" class="btn btn-lg" id="Thesis">学位論文</button>
