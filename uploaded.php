@@ -88,7 +88,7 @@
 			キーワード：{$keyword} <br/>
 			分野：{$category} <br/>
 			ファイル名：{$localFilename}";
-			fwrite($fp, "$"."paper[] = array(\n"."'genre'"."=>"."'".$genre."',\n"."'bibtexID'"."=>"."'".$bibtexID."',\n"."'title'"."=>"."'".$title."',\n"."'author'"."=>"."'".$author."',\n".	"'journal'"."=>"."'".$journal."',\n"."'location'"."=>"."'".$location."',\n"."'form'"."=>"."'".$form."',\n"."'volume'"."=>"."'".$volume."',\n"."'number'"."=>"."'".$number."',\n"."'pages_s'"."=>"."'".$pages_s."',\n"."'pages_e'"."=>"."'".$pages_e."',\n"."'year'"."=>"."'".$year."',\n"."'month'"."=>"."'".$month."',\n"."'keyword'"."=>"."'".$keyword."',\n"."'category'"."=>"."'".$category."',\n"."'filename'"."=>"."'".$localFilename."');\n");
+			fwrite($fp, "array('genre'=>"."'".$genre."',"."'bibtexID'"."=>"."'".$bibtexID."',"."'title'"."=>"."'".$title."',"."'author'"."=>"."'".$author."',".	"'journal'"."=>"."'".$journal."',"."'location'"."=>"."'".$location."',"."'form'"."=>"."'".$form."',"."'volume'"."=>"."'".$volume."',"."'number'"."=>"."'".$number."',"."'pages_s'"."=>"."'".$pages_s."',"."'pages_e'"."=>"."'".$pages_e."',"."'year'"."=>"."'".$year."',"."'month'"."=>"."'".$month."',"."'keyword'"."=>"."'".$keyword."',"."'category'"."=>"."'".$category."',"."'filename'"."=>"."'".$localFilename."');");
 		}elseif ($genre == 1) {
 		// 論文誌の場合
 			echo "以下の論文をアップロードしました。<br/> 
@@ -102,7 +102,7 @@
 			キーワード：{$keyword} <br/>
 			分野：{$category} <br/>
 			ファイル名：{$localFilename}";
-			fwrite($fp, "$"."paper[] = array(\n"."'genre'"."=>"."'".$genre."',\n"."'bibtexID'"."=>"."'".$bibtexID."',\n"."'title'"."=>"."'".$title."',\n"."'author'"."=>"."'".$author."',\n".	"'journal'"."=>"."'".$journal."',\n"."'location'"."=>"."'".$location."',\n"."'volume'"."=>"."'".$volume."',\n"."'number'"."=>"."'".$number."',\n"."'pages_s'"."=>"."'".$pages_s."',\n"."'pages_s'"."=>"."'".$pages_s."',\n"."'year'"."=>"."'".$year."',\n"."'month'"."=>"."'".$month."',\n"."'keyword'"."=>"."'".$keyword."',\n"."'category'"."=>"."'".$category."',\n"."'filename'"."=>"."'".$localFilename."');\n");
+			fwrite($fp, "array('genre'=>"."'".$genre."',"."'bibtexID'"."=>"."'".$bibtexID."',"."'title'"."=>"."'".$title."',"."'author'"."=>"."'".$author."',"."'journal'"."=>"."'".$journal."',"."'location'"."=>"."'".$location."',"."'volume'"."=>"."'".$volume."',"."'number'"."=>"."'".$number."',"."'pages_s'"."=>"."'".$pages_s."',"."'pages_s'"."=>"."'".$pages_s."',"."'year'"."=>"."'".$year."',"."'month'"."=>"."'".$month."',"."'keyword'"."=>"."'".$keyword."',"."'category'"."=>"."'".$category."',"."'filename'"."=>"."'".$localFilename."');");
 		}else{
 		// 学位論文の場合
 			echo "以下の論文をアップロードしました。<br/> 
@@ -113,7 +113,7 @@
 			キーワード：{$keyword} <br/>
 			分野：{$category} <br/>
 			ファイル名：{$localFilename}";
-			fwrite($fp, "$"."paper[] = array(\n"."'genre'"."=>"."'".$genre."',\n"."'bibtexID'"."=>"."'".$bibtexID."',\n"."'title'"."=>"."'".$title."',\n"."'author'"."=>"."'".$author."',\n".	"'degree'"."=>"."'".$degree."',\n"."'year'"."=>"."'".$year."',\n"."'keyword'"."=>"."'".$keyword."',\n"."'category'"."=>"."'".$category."',\n"."'filename'"."=>"."'".$localFilename."');\n");
+			fwrite($fp, "array('genre'=>"."'".$genre."',"."'bibtexID'"."=>"."'".$bibtexID."',"."'title'"."=>"."'".$title."',"."'author'"."=>"."'".$author."',".	"'degree'"."=>"."'".$degree."',"."'year'"."=>"."'".$year."',"."'keyword'"."=>"."'".$keyword."',"."'category'"."=>"."'".$category."',"."'filename'"."=>"."'".$localFilename."');");
 		}
 
 		fclose($fp);
@@ -124,13 +124,20 @@
 		$file   = file($WNfilename); // ファイルの中身を一行ずつ配列に格納
 		$fileCount = count($file);
 		$settingNum = 9;	//What's New!に表示したい件数 - 1 の数字を指定
+		// 表示したい件数以上ファイルに書き込まれないようにする
 		if ($fileCount > $settingNum){
-			unset($file[0]);
-			file_put_contents($WNfilename, $file);
+			unset($file[0]); //一番古い書き込み(一行目)を削除
+			file_put_contents($WNfilename, $file); //上書き
 		};
 		//What's New 用ファイルに新しく追加した論文のタイトルと日時を書き込む
 		$WNfp = fopen($WNfilename, "a");
-		fwrite($WNfp, date('Y年m月d日')."\t".$title."\n");
+		fwrite($WNfp, date('Y年m月d日')."\t".$title."\n"); //日付と追加した論文名を追記
+		fclose($WNfp);
+	?>
+
+</body>
+
+</html>, date('Y年m月d日')."\t".$title."\n");
 		fclose($WNfp);
 	?>
 

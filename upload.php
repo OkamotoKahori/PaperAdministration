@@ -1,22 +1,22 @@
 <?php
-        // デバッグ用
-        // ini_set("display_errors", On);
-        // error_reporting(E_ALL);
-        // 正規ルートでページに遷移したか確認
-        session_start();
+    // デバッグ用
+    // ini_set("display_errors", On);
+    // error_reporting(E_ALL);
+    // 正規ルートでページに遷移したか確認
+    session_start();
 
-        // ログイン状態のチェック
-        if (!isset($_SESSION["USERID"])) {
-            echo '<script type = "text/javascript">';
-            echo "<!--\n";
-            echo 'alert("パスワードを認証してください");' ."\n";
-            // メッセージボックスでOKを押したら入力フォームへ戻る
-            echo 'location.href = "password.html"';
-            echo '// -->';
-            echo '</script>';
-          exit;
-        }
-?>
+    // ログイン状態のチェック
+    if (!isset($_SESSION["USERID"])) {
+        echo '<script type = "text/javascript">';
+        echo "<!--\n";
+        echo 'alert("パスワードを認証してください");' ."\n";
+        // メッセージボックスでOKを押したら入力フォームへ戻る
+        echo 'location.href = "password.html"';
+        echo '// -->';
+        echo '</script>';
+      exit;
+    }
+?>    
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -156,6 +156,12 @@
                 '    <input type="submit" value="送信"></p>');
 
         });
+        </script>
+    </form>
+</body>
+
+</html>
+       });
         </script>
     </form>
 </body>
