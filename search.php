@@ -55,6 +55,9 @@
                     </select>
                     <input type="submit" name="r_submit" value="検索">
                 </form>
+                <li>
+                    <a href="index.html">Topへ戻る</a>
+                </li>
                 <div class="space"></div>
                 <li>
                     <a href="password.html">論文のアップロード</a>
