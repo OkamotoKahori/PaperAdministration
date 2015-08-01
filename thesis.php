@@ -1,3 +1,8 @@
+<?php
+
+?>
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -24,38 +29,19 @@
                     <a href="/PaperAdministration/">
                         論文管理システム
                     </a>
-                <li>
-                    <a href="all_paper.html">すべて</a>
                 </li>
-                <div class="space"></div>
-                <form action="search.php" method="post" onsubmit="doSomething(); return false;" enctype="multipart/form-data" accept-charset="utf-8">
-                    <p>
-                        <font color="white">絞り込み検索</font>
-                    </p>
-                    <input type="text" name="query" size="20">
-                    <p>
-                        <input type="radio" name="refine" value="s_author" checked>
-                        <font color="white">著者</font>
-                    </p>
-                    <p>
-                        <input type="radio" name="refine" value="s_keyword">
-                        <font color="white">キーワード</font>
-                    </p>
-                    <p>
-                        <font color="white">分野の選択</font>
-                    </p>
-                    <select name="category">
-                        <option value="all">すべて</option>
-                        <option value="Real">実世界</option>
-                        <option value="Communication">コミュニケーション</option>
-                        <option value="Gimmick">仕掛け学</option>
-                        <option value="InformationCompiled">情報編纂</option>
-                        <option value="Comic">コミック工学</option>
-                        <option value="Onomatopoeia">オノマトペ</option>
-                    </select>
-                    <input type="submit" name="r_submit" value="検索">
-                </form>
-                <div class="space"></div>
+                <li>
+                    <a href="#smoothplay1">博士論文</a>
+                </li>
+                <li>
+                    <a href="#smoothplay2">修士論文</a>
+                </li>
+                <li>
+                    <a href="#smoothplay3">学士論文</a>
+                </li>
+                <li>
+                    <a href="#">年代順</a>
+                </li>
                 <li>
                     <a href="password.html">論文のアップロード</a>
                 </li>
@@ -65,14 +51,22 @@
         <!-- Page Content -->
         <div id="page-content-wrapper">
             <div class="container-fluid">
-                <h1>ページ</h1>
-                <h1>遷移</h1>
-                <h1>したくない</h1>
+                <h1><div id="smoothplay1">博士論文</div></h1>
+                <div class="PhD">
+                    <p></p>
+                </div>
+                <h1><div id="smoothplay2">修士論文</div></h1>
+                <div class="Master">
+                    <p></p>
+                </div>
+                <h1><div id="smoothplay3">学士論文</div></h1>
+                <div class="Bachelor">
+                    <p></p>
+                </div>
             </div>
         </div>
         <!-- /#page-content-wrapper -->
     </div>
-
     <!-- /#wrapper -->
     <!-- jQuery -->
     <script src="js/jquery.js"></script>
