@@ -57,6 +57,9 @@
                 </form>
                 <div class="space"></div>
                 <li>
+                    <a href="index.html">Topへ戻る</a>
+                </li>
+                <li>
                     <a href="password.html">論文のアップロード</a>
                 </li>
             </ul>
