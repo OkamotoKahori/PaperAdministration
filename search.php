@@ -57,9 +57,6 @@
                 </form>
                 <div class="space"></div>
                 <li>
-                    <a href="index.html">Topへ戻る</a>
-                </li>
-                <li>
                     <a href="password.html">論文のアップロード</a>
                 </li>
             </ul>
@@ -94,7 +91,7 @@ if($refine == 's_author'){
 //databaseの内容を改行で区切る
 $dataSet = explode("\n", $data);
 //database.texに含まれるデータの個数を数える
-    $datalength = substr_count($data, "array");
+$dataCount = substr_count($data, "array");
 //一人前ずつのデータを取り出します
 foreach ($dataSet as $data) {
     //文字列をphpのソースとして読めるようにしています
@@ -108,22 +105,22 @@ foreach ($dataSet as $data) {
         }elseif($paper['category'] == $query_category){
             result($paper);
         }else{
-            $not = notPaper($not,$datalength);
+            $not = notPaper($not,$dataCount);
         }
     }else{
         if($query_category == "all"){
-            $not = search_result($paper,$query_key,$query_value,$not,$datalength);
+            $not = search_result($paper,$query_key,$query_value,$not,$dataCount);
         }elseif($paper['category'] == $query_category){
-            $not = search_result($paper,$query_key,$query_value,$not,$datalength);
+            $not = search_result($paper,$query_key,$query_value,$not,$dataCount);
         }else{
-            $not = notPaper($not,$datalength);
+            $not = notPaper($not,$dataCount);
         }
     }
 }
 //入力された文字列でデータベース内を検索
-function search_result($paper,$query_key,$query_value,$not,$datalength){
+function search_result($paper,$query_key,$query_value,$not,$dataCount){
     if(strpos($paper[$query_key], $query_value) === FALSE){
-        $not = notPaper($not,$datalength);
+        $not = notPaper($not,$dataCount);
     }else{
         //検索結果を表示する
         result($paper);
@@ -166,10 +163,10 @@ function result($paper){
     print('</div>');
 }
 //データベース内に論文があるかをチェック
-function notPaper($not,$datalength){
+function notPaper($not,$dataCount){
     //データベース内に論文があるかをチェック
     $not++;
-    if($not >= $datalength){
+    if($not >= $dataCount){
         print('<h1>お探しの論文はみつかりませんでした</h1>');
     }
     return($not);

@@ -28,11 +28,11 @@
 	    	echo '</script>';
 		  exit;
 		}
-		
+
 		// ファイルのアップロード
 		// ファイル名の取り出し
 		$localFilename = $_FILES['upfile']['name'];
-		//一時ファイル名の取り出し 
+		//一時ファイル名の取り出し
 		$temp = $_FILES['upfile']['tmp_name'];
 		// 保存先のディレクトリ
 		$dir = 'PaperFiles/';
@@ -88,7 +88,7 @@
 			キーワード：{$keyword} <br/>
 			分野：{$category} <br/>
 			ファイル名：{$localFilename}";
-			fwrite($fp, "array('genre'=>"."'".$genre."',"."'bibtexID'"."=>"."'".$bibtexID."',"."'title'"."=>"."'".$title."',"."'author'"."=>"."'".$author."',".	"'journal'"."=>"."'".$journal."',"."'location'"."=>"."'".$location."',"."'form'"."=>"."'".$form."',"."'volume'"."=>"."'".$volume."',"."'number'"."=>"."'".$number."',"."'pages_s'"."=>"."'".$pages_s."',"."'pages_e'"."=>"."'".$pages_e."',"."'year'"."=>"."'".$year."',"."'month'"."=>"."'".$month."',"."'keyword'"."=>"."'".$keyword."',"."'category'"."=>"."'".$category."',"."'filename'"."=>"."'".$localFilename."');");
+			fwrite($fp,"\n"."array('genre'=>"."'".$genre."',"."'bibtexID'"."=>"."'".$bibtexID."',"."'title'"."=>"."'".$title."',"."'author'"."=>"."'".$author."',".	"'journal'"."=>"."'".$journal."',"."'location'"."=>"."'".$location."',"."'form'"."=>"."'".$form."',"."'volume'"."=>"."'".$volume."',"."'number'"."=>"."'".$number."',"."'pages_s'"."=>"."'".$pages_s."',"."'pages_e'"."=>"."'".$pages_e."',"."'year'"."=>"."'".$year."',"."'month'"."=>"."'".$month."',"."'keyword'"."=>"."'".$keyword."',"."'category'"."=>"."'".$category."',"."'filename'"."=>"."'".$localFilename."');");
 		}elseif ($genre == 1) {
 		// 論文誌の場合
 			echo "以下の論文をアップロードしました。<br/> 
@@ -102,7 +102,7 @@
 			キーワード：{$keyword} <br/>
 			分野：{$category} <br/>
 			ファイル名：{$localFilename}";
-			fwrite($fp, "array('genre'=>"."'".$genre."',"."'bibtexID'"."=>"."'".$bibtexID."',"."'title'"."=>"."'".$title."',"."'author'"."=>"."'".$author."',"."'journal'"."=>"."'".$journal."',"."'location'"."=>"."'".$location."',"."'volume'"."=>"."'".$volume."',"."'number'"."=>"."'".$number."',"."'pages_s'"."=>"."'".$pages_s."',"."'pages_s'"."=>"."'".$pages_s."',"."'year'"."=>"."'".$year."',"."'month'"."=>"."'".$month."',"."'keyword'"."=>"."'".$keyword."',"."'category'"."=>"."'".$category."',"."'filename'"."=>"."'".$localFilename."');");
+			fwrite($fp, "\n"."array('genre'=>"."'".$genre."',"."'bibtexID'"."=>"."'".$bibtexID."',"."'title'"."=>"."'".$title."',"."'author'"."=>"."'".$author."',"."'journal'"."=>"."'".$journal."',"."'location'"."=>"."'".$location."',"."'volume'"."=>"."'".$volume."',"."'number'"."=>"."'".$number."',"."'pages_s'"."=>"."'".$pages_s."',"."'pages_s'"."=>"."'".$pages_s."',"."'year'"."=>"."'".$year."',"."'month'"."=>"."'".$month."',"."'keyword'"."=>"."'".$keyword."',"."'category'"."=>"."'".$category."',"."'filename'"."=>"."'".$localFilename."');");
 		}else{
 		// 学位論文の場合
 			echo "以下の論文をアップロードしました。<br/> 
@@ -113,7 +113,7 @@
 			キーワード：{$keyword} <br/>
 			分野：{$category} <br/>
 			ファイル名：{$localFilename}";
-			fwrite($fp, "array('genre'=>"."'".$genre."',"."'bibtexID'"."=>"."'".$bibtexID."',"."'title'"."=>"."'".$title."',"."'author'"."=>"."'".$author."',".	"'degree'"."=>"."'".$degree."',"."'year'"."=>"."'".$year."',"."'keyword'"."=>"."'".$keyword."',"."'category'"."=>"."'".$category."',"."'filename'"."=>"."'".$localFilename."');");
+			fwrite($fp, "\n"."array('genre'=>"."'".$genre."',"."'bibtexID'"."=>"."'".$bibtexID."',"."'title'"."=>"."'".$title."',"."'author'"."=>"."'".$author."',".	"'degree'"."=>"."'".$degree."',"."'year'"."=>"."'".$year."',"."'keyword'"."=>"."'".$keyword."',"."'category'"."=>"."'".$category."',"."'filename'"."=>"."'".$localFilename."');");
 		}
 
 		fclose($fp);
@@ -134,13 +134,6 @@
 		fwrite($WNfp, date('Y年m月d日')."\t".$title."\n"); //日付と追加した論文名を追記
 		fclose($WNfp);
 	?>
-
-</body>
-
-</html>, date('Y年m月d日')."\t".$title."\n");
-		fclose($WNfp);
-	?>
-
 </body>
 
 </html>
