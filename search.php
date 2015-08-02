@@ -8,6 +8,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="css/simple-sidebar.css" rel="stylesheet">
+    <link href="css/search.css" rel="stylesheet">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
@@ -66,13 +67,8 @@
         </div>
         <!-- /#sidebar-wrapper -->
         <!-- Page Content -->
-        <!--
         <div id="page-content-wrapper">
-            <div class="container-fluid">
-                ここに検索結果が表示されます
-            </div>
-        </div>
-        -->
+        <!-- ここに検索結果が表示されます -->
 <?php
 //echo "phpの読み込みはできています"."<br />";
 $filename = "database.txt";
@@ -112,16 +108,16 @@ foreach ($dataSet as $data) {
         }
     }else{
         if($query_category == "all"){
-            $not = search_result($paper,$query_key,$query_value,$not,$dataCount);
+            $not = search($paper,$query_key,$query_value,$not,$dataCount);
         }elseif($paper['category'] == $query_category){
-            $not = search_result($paper,$query_key,$query_value,$not,$dataCount);
+            $not = search($paper,$query_key,$query_value,$not,$dataCount);
         }else{
             $not = notPaper($not,$dataCount);
         }
     }
 }
 //入力された文字列でデータベース内を検索
-function search_result($paper,$query_key,$query_value,$not,$dataCount){
+function search($paper,$query_key,$query_value,$not,$dataCount){
     if(strpos($paper[$query_key], $query_value) === FALSE){
         $not = notPaper($not,$dataCount);
         return($not);
@@ -135,7 +131,9 @@ function notPaper($not,$dataCount){
     //データベース内に論文があるかをチェック
     $not++;
     if($not >= $dataCount){
-        echo '<h1>お探しの論文はみつかりませんでした</h1>';
+        echo '<div class="container-fluid">
+            <h1>お探しの論文はみつかりませんでした</h1>
+            </div>';
     }
     return($not);
 }
@@ -145,37 +143,35 @@ function result($paper){
     $location = locationTransform($paper['location']);
     $form = formTransform($paper['form']);
     $category = categoryTransform($paper['category']);
-    //検索結果の表示に使うhtmlタグ
-    echo '<div id="page-content-wrapper">
-        <div class="container-fluid">';
     //ジャンルに問わず表示する内容（前半）
-    echo '<li>論文タイトル：</li>
-        <h2>'.$paper['title'].'</h2>
-        <li>著者名：'.$paper['author'].'</li>';
+    echo '<div class="container-fluid">
+        <p>論文タイトル：</p>
+        <h3>'.$paper['title'].'</h3>
+        <p>著者名：'.$paper['author'].'</p>';
     if($paper['genre']==2){
         //修論・卒論の表示
-        echo '<li>発表年：'.$paper['year'].'</li>';
+        echo '<p>発表年：'.$paper['year'].'</p>';
     }else{
         //学会発表・国際会議の表示
         if($paper['genre']==0){
-            echo '<li>学会名：'.$paper['journal'].'</li>';
+            echo '<p>学会名：'.$paper['journal'].'</p>';
         }else{
-            echo '<li>論文誌名：'.$paper['journal'].'</li>';
+            echo '<p>論文誌名：'.$paper['journal'].'</p>';
         }
-        echo '<li>場所：'.$location.'</li>
-            <li>発表形態：'.$form.'</li>
-            <li>学位：'.$paper['degree'].'</li>
-            <li>Vol.：'.$paper['volume'].'</li>
-            <li>No.：'.$paper['number'].'</li>
-            <li>pp.：'.$paper['pages_s']."-".$paper['pages_e'].'</li>
-            <li>発表年：'.$paper['year'].'</li>
-            <li>発表月：'.$paper['month'].'</li>';
+        echo '<p>場所：'.$location.'</p>
+            <p>発表形態：'.$form.'</p>
+            <p>学位：'.$paper['degree'].'</p>
+            <p>Vol.：'.$paper['volume'].'</p>
+            <p>No.：'.$paper['number'].'</p>
+            <p>pp.：'.$paper['pages_s']."-".$paper['pages_e'].'</p>
+            <p>発表年：'.$paper['year'].'</p>
+            <p>発表月：'.$paper['month'].'</p>';
     }
     //ジャンルに問わず表示する内容（後半）
-    echo '<li>キーワード：'.$paper['keyword'].'</li>
-        <li>研究分野：'.$category.'</li>
-        <li>PDFファイル：'.$paper['filename'].'</li>';
-    echo "</div></div>";
+    echo '<p>キーワード：'.$paper['keyword'].'</p>
+        <p>研究分野：'.$category.'</p>
+        <p>PDFファイル：'.$paper['filename'].'</p>
+        </div>';
 }
 //発表場所を日本語表記に変換する
 function locationTransform($location){
@@ -186,7 +182,7 @@ function locationTransform($location){
     }
     return($location);
 }
-//発表場所を日本語表記に変換する
+//発表形式を日本語表記に変換する
 function formTransform($form){
     if($form == 0){
         $form = "口頭発表";
@@ -217,6 +213,8 @@ function categoryTransform($category){
     return($category);
 }
 ?>
+        <!-- ここに検索結果が表示されます -->
+        </div>
     </div>
     <!-- /#page-content-wrapper -->
     <!-- /#wrapper -->
