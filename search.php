@@ -142,7 +142,9 @@ function notPaper($not,$dataCount){
 //検索結果を表示するための関数
 function result($paper){
     //発表形態と研究分野の表示を変更
-    $category = transform($paper['category']);
+    $location = locationTransform($paper['location']);
+    $form = formTransform($paper['form']);
+    $category = categoryTransform($paper['category']);
     //検索結果の表示に使うhtmlタグ
     echo '<div id="page-content-wrapper">
         <div class="container-fluid">';
@@ -160,8 +162,8 @@ function result($paper){
         }else{
             echo '<li>論文誌名：'.$paper['journal'].'</li>';
         }
-        echo '<li>場所：'.$paper['location'].'</li>
-            <li>発表形態：'.$paper['form'].'</li>
+        echo '<li>場所：'.$location.'</li>
+            <li>発表形態：'.$form.'</li>
             <li>学位：'.$paper['degree'].'</li>
             <li>Vol.：'.$paper['volume'].'</li>
             <li>No.：'.$paper['number'].'</li>
@@ -175,7 +177,28 @@ function result($paper){
         <li>PDFファイル：'.$paper['filename'].'</li>';
     echo "</div></div>";
 }
-function transform($category){
+//発表場所を日本語表記に変換する
+function locationTransform($location){
+    if($location == "Japan"){
+        $location = "国内";
+    }else{
+        $location = "国外";
+    }
+    return($location);
+}
+//発表場所を日本語表記に変換する
+function formTransform($form){
+    if($form == 0){
+        $form = "口頭発表";
+    }elseif($form == 1){
+        $form = "ポスター発表";
+    }else{
+        $form = "口頭発表＋ポスター発表";
+    }
+    return($form);
+}
+//カテゴリを日本語表記に変換する関数
+function categoryTransform($category){
     if($category == "Real"){
         $category = "実世界";
     }elseif($category == "Communication"){
