@@ -124,55 +124,74 @@ foreach ($dataSet as $data) {
 function search_result($paper,$query_key,$query_value,$not,$dataCount){
     if(strpos($paper[$query_key], $query_value) === FALSE){
         $not = notPaper($not,$dataCount);
+        return($not);
     }else{
         //検索結果を表示する
         result($paper);
     }
-    return($not);
-}
-//検索結果を表示するための関数
-function result($paper){
-    //検索結果の表示に使うhtmlタグ
-    print('<div id="page-content-wrapper">');
-    print('<div class="container-fluid">');
-    //ジャンルに問わず表示する内容（前半）
-    print('<li>論文タイトル：</li>');
-    print('<h2>'.$paper['title'].'</h2>');
-    print('<li>著者名：'.$paper['author'].'</li>');
-    if($paper['genre']==2){
-        //修論・卒論の表示
-        print('<li>発表年：'.$paper['year'].'</li>');
-    }else{
-        //学会発表・国際会議の表示
-        if($paper['genre']==0){
-            print('<li>学会名：'.$paper['journal'].'</li>');
-        }else{
-            print('<li>論文誌名：'.$paper['journal'].'</li>');
-        }
-        print('<li>場所：'.$paper['location'].'</li>');
-        print('<li>発表形態：'.$paper['form'].'</li>');
-        print('<li>学位：'.$paper['degree'].'</li>');
-        print('<li>Vol.：'.$paper['volume'].'</li>');
-        print('<li>No.：'.$paper['number'].'</li>');
-        print('<li>pp.：'.$paper['pages_s']."-".$paper['pages_e'].'</li>');
-        print('<li>発表年：'.$paper['year'].'</li>');
-        print('<li>発表月：'.$paper['month'].'</li>');
-    }
-    //ジャンルに問わず表示する内容（後半）
-    print('<li>キーワード：'.$paper['keyword'].'</li>');
-    print('<li>研究分野：'.$paper['category'].'</li>');
-    print('<li>PDFファイル：'.$paper['filename'].'</li>');
-    print('</div>');
-    print('</div>');
 }
 //データベース内に論文があるかをチェック
 function notPaper($not,$dataCount){
     //データベース内に論文があるかをチェック
     $not++;
     if($not >= $dataCount){
-        print('<h1>お探しの論文はみつかりませんでした</h1>');
+        echo '<h1>お探しの論文はみつかりませんでした</h1>';
     }
     return($not);
+}
+//検索結果を表示するための関数
+function result($paper){
+    //発表形態と研究分野の表示を変更
+    $category = transform($paper['category']);
+    //検索結果の表示に使うhtmlタグ
+    echo '<div id="page-content-wrapper">
+        <div class="container-fluid">';
+    //ジャンルに問わず表示する内容（前半）
+    echo '<li>論文タイトル：</li>
+        <h2>'.$paper['title'].'</h2>
+        <li>著者名：'.$paper['author'].'</li>';
+    if($paper['genre']==2){
+        //修論・卒論の表示
+        echo '<li>発表年：'.$paper['year'].'</li>';
+    }else{
+        //学会発表・国際会議の表示
+        if($paper['genre']==0){
+            echo '<li>学会名：'.$paper['journal'].'</li>';
+        }else{
+            echo '<li>論文誌名：'.$paper['journal'].'</li>';
+        }
+        echo '<li>場所：'.$paper['location'].'</li>
+            <li>発表形態：'.$paper['form'].'</li>
+            <li>学位：'.$paper['degree'].'</li>
+            <li>Vol.：'.$paper['volume'].'</li>
+            <li>No.：'.$paper['number'].'</li>
+            <li>pp.：'.$paper['pages_s']."-".$paper['pages_e'].'</li>
+            <li>発表年：'.$paper['year'].'</li>
+            <li>発表月：'.$paper['month'].'</li>';
+    }
+    //ジャンルに問わず表示する内容（後半）
+    echo '<li>キーワード：'.$paper['keyword'].'</li>
+        <li>研究分野：'.$category.'</li>
+        <li>PDFファイル：'.$paper['filename'].'</li>';
+    echo "</div></div>";
+}
+function transform($category){
+    if($category == "Real"){
+        $category = "実世界";
+    }elseif($category == "Communication"){
+        $category = "コミュニケーション";
+    }elseif($category == "Gimmick"){
+        $category = "仕掛学";
+    }elseif($category == "InformationCompiled"){
+        $category = "情報編纂";
+    }elseif($category == "Comic"){
+        $category = "コミック工学";
+    }elseif($category == "Onomatopoeia"){
+        $category = "オノマトペ";
+    }else{
+        $category = "all";
+    }
+    return($category);
 }
 ?>
     </div>
