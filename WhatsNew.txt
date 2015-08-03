@@ -6,3 +6,4 @@
 2015年07月28日	赤外光の波長特性を利用した光学認証装置に関する研究
 2015年07月28日	オノマトペ関連語辞書の逐次的精製とその利用に関する研究
 2015年08月01日	電子玩具製作キット“Haconiwa”を用いたワークショップのデザイン
+2015年08月03日	Haconiwa: A toolkit for introducing novice users to electronic circuits

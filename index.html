@@ -49,21 +49,25 @@
                 </li>
                 <div class="space"></div>
                 <form action="search.php" method="post" enctype="multipart/form-data" accept-charset="utf-8">
-                    <p>
+                    <li>
                         <font color="white">絞り込み検索</font>
-                    </p>
+                    </li>
                     <input type="text" name="query" size="20">
-                    <p>
+                    <li>
                         <input type="radio" name="refine" value="s_author" checked>
                         <font color="white">著者</font>
-                    </p>
-                    <p>
+                    </li>
+                    <li>
                         <input type="radio" name="refine" value="s_keyword">
                         <font color="white">キーワード</font>
-                    </p>
-                    <p>
+                    </li>
+                    <li>
+                        <input type="radio" name="refine" value="s_all">
+                        <font color="white">すべて</font>
+                    </li>
+                    <li>
                         <font color="white">分野の選択</font>
-                    </p>
+                    </li>
                     <select name="category">
                         <option value="all">すべて</option>
                         <option value="Real">実世界</option>

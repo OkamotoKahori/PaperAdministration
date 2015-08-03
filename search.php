@@ -30,21 +30,25 @@
                 </li>
                 <div class="space"></div>
                 <form action="search.php" method="post" enctype="multipart/form-data" accept-charset="utf-8">
-                    <p>
+                    <li>
                         <font color="white">絞り込み検索</font>
-                    </p>
+                    </li>
                     <input type="text" name="query" size="20">
-                    <p>
+                    <li>
                         <input type="radio" name="refine" value="s_author" checked>
                         <font color="white">著者</font>
-                    </p>
-                    <p>
+                    </li>
+                    <li>
                         <input type="radio" name="refine" value="s_keyword">
                         <font color="white">キーワード</font>
-                    </p>
-                    <p>
+                    </li>
+                    <li>
+                        <input type="radio" name="refine" value="s_all">
+                        <font color="white">すべて</font>
+                    </li>
+                    <li>
                         <font color="white">分野の選択</font>
-                    </p>
+                    </li>
                     <select name="category">
                         <option value="all">すべて</option>
                         <option value="Real">実世界</option>
@@ -70,55 +74,81 @@
         <div id="page-content-wrapper">
         <!-- ここに検索結果が表示されます -->
 <?php
-//echo "phpの読み込みはできています"."<br />";
-$filename = "database.txt";
-$data = file_get_contents($filename);
+//database.txtの内容を検索できる形式に変換
+$paperArray = makePaperArray();
 //入力された情報を取得
-$query_value = htmlspecialchars($_POST['query']);
-//echo $query_value;
-//if(empty($query_value)){echo "empty";}else{echo "Hello";}
+$query = htmlspecialchars($_POST['query']);
 $refine = htmlspecialchars($_POST['refine']);
-$query_category = htmlspecialchars($_POST['category']);
-//htmlから渡された値をphpで使えるように変更
-if($refine == 's_author'){
-    $query_key = 'author';
-}elseif($refine == 's_keyword'){
-    $query_key = 'keyword';
-}else{
-    $query_key = 'other';
-}
-//databaseの内容を改行で区切る
-$dataSet = explode("\n", $data);
-//database.texに含まれるデータの個数を数える
-$dataCount = substr_count($data, "array");
-//一人前ずつのデータを取り出します
-foreach ($dataSet as $data) {
-    //文字列をphpのソースとして読めるようにしています
-    eval('$paper = '.$data.';');
-    //テキストボックスに入力されているかどうかを判断
-    if(empty($query_value)){
-        //入力されていなければ，速攻で検索結果を表示
-        //どのカテゴリが選択されているかを判断
-        if($query_category == "all"){
+$category = htmlspecialchars($_POST['category']);
+//database.texに含まれるデータの個数(arrayの数)を数える
+$dataCount = count($paperArray);
+//検索する
+//クエリが入力されているかどうかを判断
+if(empty($query)){
+    //クエリが入力されていない場合
+    //カテゴリの指定があるかどうかを判断
+    foreach ($paperArray as $paper) {
+        if($category == "all"){
+            //全ての論文を表示する
             result($paper);
-        }elseif($paper['category'] == $query_category){
+        }elseif($category == $paper['category']){
+            //指定されたカテゴリの論文を表示する
             result($paper);
         }else{
-            $not = notPaper($not,$dataCount);
-        }
-    }else{
-        if($query_category == "all"){
-            $not = search($paper,$query_key,$query_value,$not,$dataCount);
-        }elseif($paper['category'] == $query_category){
-            $not = search($paper,$query_key,$query_value,$not,$dataCount);
-        }else{
+            //指定されたカテゴリの論文がなかった場合
             $not = notPaper($not,$dataCount);
         }
     }
+}else{
+    //クエリが入力されている場合
+    //クエリの種類（ラジオボタン）がどれかを判断
+    if($refine == 's_author'){
+        //著者の場合
+        $targetKey = 'author';
+    }elseif($refine == 's_keyword'){
+        //キーワードの場合
+        $targetKey = 'keyword';
+    }else{
+        //すべての場合
+        $targetKey = 'free';
+    }
+    //検索する
+    foreach ($paperArray as $paper) {
+        if($targetKey == "free"){
+            //すべての情報を１つの文字列にする
+            $targetStrings = $paper['title'].$paper['author'].$paper['year'].$paper['journal'].$paper['location'].$paper['form'].$paper['keyword'];
+            $not = stringSearch($targetStrings,$query,$paper,$not,$dataCount);
+        }else{
+            if($category == "all"){
+                $targetStrings = $paper[$targetKey];
+                $not = stringSearch($targetStrings,$query,$paper,$not,$dataCount);
+            }elseif($category == $paper['category']){
+                $targetStrings = $paper[$targetKey];
+                $not = stringSearch($paper[$targetKey],$query,$paper,$not,$dataCount);
+            }else{
+                $not = notPaper($not,$dataCount);
+            }
+        }
+    }
 }
-//入力された文字列でデータベース内を検索
-function search($paper,$query_key,$query_value,$not,$dataCount){
-    if(strpos($paper[$query_key], $query_value) === FALSE){
+//database.txtの内容を検索できる形式に変換する関数
+function makePaperArray(){
+    //echo "<br />makeData";
+    //database.txtの内容を$databaseに格納
+    $database = file_get_contents("database.txt");
+    //database.txtの内容を改行で区切る
+    $dataArray = explode("\n", $database);
+    //一人前ずつのデータを取り出します
+    foreach ($dataArray as $data) {
+        //文字列をphpのソースとして読めるようにする
+        eval('$paperArray[] = '.$data.';');
+    }
+    return($paperArray);
+}
+//入力された文字列で$paper内の著者名orキーワードを検索する関数
+function stringSearch($targetStrings,$query,$paper,$not,$dataCount){
+    //echo "<br />stringSearch";
+    if(strpos($targetStrings, $query) === FALSE){
         $not = notPaper($not,$dataCount);
         return($not);
     }else{
@@ -126,8 +156,10 @@ function search($paper,$query_key,$query_value,$not,$dataCount){
         result($paper);
     }
 }
-//データベース内に論文があるかをチェック
+//データベース内に論文があるかをチェックする関数
 function notPaper($not,$dataCount){
+    //echo "<br />notPaper";
+    //echo "<br />".$not."-".$dataCount;
     //データベース内に論文があるかをチェック
     $not++;
     if($not >= $dataCount){
@@ -137,12 +169,11 @@ function notPaper($not,$dataCount){
     }
     return($not);
 }
-//検索結果を表示するための関数
+//検索結果を表示する関数
 function result($paper){
-    //発表形態と研究分野の表示を変更
-    $location = locationTransform($paper['location']);
-    $form = formTransform($paper['form']);
-    $category = categoryTransform($paper['category']);
+    //echo "<br />result";
+    //発表場所，発表形式，カテゴリを日本語表記に変換
+    $paper = Transform($paper);
     //ジャンルに問わず表示する内容（前半）
     echo '<div class="container-fluid">
         <p>論文タイトル：</p>
@@ -158,8 +189,8 @@ function result($paper){
         }else{
             echo '<p>論文誌名：'.$paper['journal'].'</p>';
         }
-        echo '<p>場所：'.$location.'</p>
-            <p>発表形態：'.$form.'</p>
+        echo '<p>場所：'.$paper['location'].'</p>
+            <p>発表形態：'.$paper['form'].'</p>
             <p>学位：'.$paper['degree'].'</p>
             <p>Vol.：'.$paper['volume'].'</p>
             <p>No.：'.$paper['number'].'</p>
@@ -169,48 +200,54 @@ function result($paper){
     }
     //ジャンルに問わず表示する内容（後半）
     echo '<p>キーワード：'.$paper['keyword'].'</p>
-        <p>研究分野：'.$category.'</p>
+        <p>研究分野：'.$paper['category'].'</p>
         <p>PDFファイル：'.$paper['filename'].'</p>
         </div>';
 }
-//発表場所を日本語表記に変換する
-function locationTransform($location){
-    if($location == "Japan"){
-        $location = "国内";
+//発表場所，発表形式，学位，カテゴリを日本語表記に変換する関数
+function Transform($paper){
+    //echo "<br />Transform";
+    //学位を日本語表記に変換する
+    if($paper['degree'] == "Bachelor"){
+        $paper['degree'] = "学士";
+    }elseif($paper['degree'] == "Master"){
+        $paper['degree'] = "修士";
+    }elseif($paper['degree'] == "Doctor"){
+        $paper['degree'] = "博士";
     }else{
-        $location = "国外";
+        $paper['degree'] = "---";
     }
-    return($location);
-}
-//発表形式を日本語表記に変換する
-function formTransform($form){
-    if($form == 0){
-        $form = "口頭発表";
-    }elseif($form == 1){
-        $form = "ポスター発表";
+    //発表場所を日本語表記に変換する
+    if($paper['location'] == "Japan"){
+        $paper['location'] = "国内";
     }else{
-        $form = "口頭発表＋ポスター発表";
+        $paper['location'] = "国外";
     }
-    return($form);
-}
-//カテゴリを日本語表記に変換する関数
-function categoryTransform($category){
-    if($category == "Real"){
-        $category = "実世界";
-    }elseif($category == "Communication"){
-        $category = "コミュニケーション";
-    }elseif($category == "Gimmick"){
-        $category = "仕掛学";
-    }elseif($category == "InformationCompiled"){
-        $category = "情報編纂";
-    }elseif($category == "Comic"){
-        $category = "コミック工学";
-    }elseif($category == "Onomatopoeia"){
-        $category = "オノマトペ";
+    //発表形式を日本語表記に変換する
+    if($paper['form'] == 0){
+        $paper['form'] = "口頭発表";
+    }elseif($paper['form'] == 1){
+        $paper['form'] = "ポスター発表";
     }else{
-        $category = "all";
+        $paper['form'] = "口頭発表＋ポスター発表";
     }
-    return($category);
+    //カテゴリを日本語表記に変換する関数
+    if($paper['category'] == "Real"){
+        $paper['category'] = "実世界";
+    }elseif($paper['category'] == "Communication"){
+        $paper['category'] = "コミュニケーション";
+    }elseif($paper['category'] == "Gimmick"){
+        $paper['category'] = "仕掛学";
+    }elseif($paper['category'] == "InformationCompiled"){
+        $paper['category'] = "情報編纂";
+    }elseif($paper['category'] == "Comic"){
+        $paper['category'] = "コミック工学";
+    }elseif($paper['category'] == "Onomatopoeia"){
+        $paper['category'] = "オノマトペ";
+    }else{
+        $paper['category'] = "all";
+    }
+    return($paper);
 }
 ?>
         <!-- ここに検索結果が表示されます -->
