@@ -30,31 +30,6 @@
                         論文管理システム
                     </a>
                 </li>
-<!--
-                <li>
-                    <a href="#smoothplay1">博士論文</a>
-                </li>
-                <li>
-                    <a href="#smoothplay2">修士論文</a>
-                </li>
-                <li>
-                    <a href="#smoothplay3">学士論文</a>
-                </li>
-                <li>
-                    <a href="#">年代順</a>
-                </li>
-                <li>
-                    <a href="password.html">論文のアップロード</a>
-                </li>
-            </ul>
-        </div>
--->
-        <!-- /#sidebar-wrapper -->
-        <!-- Page Content -->
-<!--
-        <div id="page-content-wrapper">
-            <div class="container-fluid">
--->
 <?php
 //database.txtの内容を検索できる形式に変換
 $paperArray = makePaperArray();
@@ -69,10 +44,10 @@ foreach ($paperArray as $paper) {
         $nationalArray[] = $paper;
     }
 }
-//学会順にソート
-$sortArray = categorySort($nationalArray,'degree');
+//年代順にソート
+$sortArray = categorySort($nationalArray,'year');
 //学会ごとの論文の数を数える
-$dataCount = categoryCount($sortArray,'degree');
+$dataCount = categoryCount($sortArray,'year');
 //学会名を配列に入れる
 $dataKey = array_keys($dataCount);
 //学会名の配列にいくつデータがあるのかを調べる
@@ -85,8 +60,7 @@ for($count = 0; $count < $dataNum; $count++){
     echo ' <li><a href="#smoothplay'.$smoothNum.'">'.$key.'</a></li>';
 }
 //htmlタグの表示
-echo '<li><a href="yearsort.php">年代順</a></li>
-    <li><a href="password.html">論文のアップロード</a></li>
+echo '<li><a href="password.html">論文のアップロード</a></li>
     </ul>
 </div>
 <!-- /#sidebar-wrapper -->
@@ -105,9 +79,6 @@ for($count = 0; $count < $dataNum; $count++){
     }
     $countEnd = $dataCount[$key];
 }
-//年代順にソート
-$sortArray = categorySort($sortArray,'year');
-//var_dump($sortArray);
 //database.txtの内容を検索できる形式に変換する関数
 function makePaperArray(){
     //echo "<br />makeData";
@@ -223,19 +194,7 @@ function Transform($paper){
     }
     return($paper);
 }
-?><!--
-                <h1><div id="smoothplay1">博士論文</div></h1>
-                <div class="PhD">
-                    <p></p>
-                </div>
-                <h1><div id="smoothplay2">修士論文</div></h1>
-                <div class="Master">
-                    <p></p>
-                </div>
-                <h1><div id="smoothplay3">学士論文</div></h1>
-                <div class="Bachelor">
-                    <p></p>
--->
+?>
                 </div>
             </div>
         </div>
