@@ -126,3 +126,8 @@ h1 {
     margin:0;
     padding-bottom:5px; 
 }
+div.paper-fluid {
+    border-top: 1px solid #dd0000;
+    margin:0;
+    padding-top:5px; 
+}

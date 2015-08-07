@@ -1,3 +1,8 @@
+<?php
+
+?>
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -32,7 +37,7 @@ $paperArray = MakePaperArray();
 
 //ここから下は表示するページごとに変更する//
 foreach ($paperArray as $paper) {
-    if($paper['genre'] == 0 && $paper['location'] == 'Outside'){
+    if($paper['genre'] == 0 && $paper['location'] == 'Japan'){
         $dataArray[] = $paper;
     }
 }
@@ -50,13 +55,9 @@ $dataKeyArray = array_keys($dataCountArray);
 $dataNum = count($dataKeyArray);
 //smoothplayするための左の黒い部分の記述
 $countEnd = 0;
-for($count = 0; $count <= $dataNum; $count++){
+for($count = 0; $count < $dataNum; $count++){
+    $midashi = $dataKeyArray[$count];
     $smoothNum = $count+1;
-    if($smoothNum == $dataNum+1){
-        $midashi = '受賞';
-    }else{
-        $midashi = $dataKeyArray[$count];
-    }
     echo ' <li><a href="#smoothplay'.$smoothNum.'">'.$midashi.'</a></li>';
 }
 //htmlタグの表示
@@ -67,16 +68,12 @@ echo '<li><a href="yearsort.php">年代順</a></li>
 <!-- /#sidebar-wrapper -->
 <!-- Page Content -->
 <div id="page-content-wrapper">
-    <div class="container-fluid">';
+<div class="container-fluid">';
 //右の白い部分（メインの部分）に論文を学会ごとに表示する
 $countEnd = 0;
-for($count = 0; $count <= $dataNum; $count++){
+for($count = 0; $count < $dataNum; $count++){
+    $midashi = $dataKeyArray[$count];
     $smoothNum = $count+1;
-    if($smoothNum == $dataNum+1){
-        $midashi = '受賞';
-    }else{
-        $midashi = $dataKeyArray[$count];
-    }
     echo ' <h1><div id="smoothplay'.$smoothNum.'">'.$midashi.'</div></h1>';
     for ($count2 = $countEnd; $count2 < $countEnd+$dataCountArray[$midashi]; $count2++) {
         //result($dataSortArray[$count2]);
@@ -132,7 +129,7 @@ function Result($paper){
     //発表場所，発表形式，カテゴリを日本語表記に変換
     $paper = Transform($paper);
     //ジャンルに問わず表示する内容（前半）
-    echo '<div class="container-fluid">
+    echo '<div class="paper-fluid">
         <p>論文タイトル：</p>
         <h3>'.$paper['title'].'</h3>
         <p>著者名：'.$paper['author'].'</p>
@@ -208,7 +205,7 @@ function Transform($paper){
     return($paper);
 }
 ?>
-            </div>
+        </div>
         </div>
         <!-- /#page-content-wrapper -->
     </div>

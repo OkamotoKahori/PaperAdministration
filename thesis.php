@@ -68,7 +68,7 @@ echo '<li><a href="yearsort.php">年代順</a></li>
 <!-- /#sidebar-wrapper -->
 <!-- Page Content -->
 <div id="page-content-wrapper">
-    <div class="container-fluid">';
+<div class="container-fluid">';
 //右の白い部分（メインの部分）に論文を学会ごとに表示する
 $countEnd = 0;
 for($count = 0; $count < $dataNum; $count++){
@@ -84,7 +84,7 @@ for($count = 0; $count < $dataNum; $count++){
     $yearSortArray = CategorySort($yearSortArray,'year');
     //見出し１つ分の論文だけが入っている配列を年代順にソートした配列を年代順に表示
     foreach ($yearSortArray as $paper) {
-        result($paper);
+        Result($paper);
     }
     $yearSortArray = array();
     $countEnd = $dataCountArray[$midashi];
@@ -124,12 +124,12 @@ function CategoryCount($paperArray,$category){
     return($dataCountArray);
 }
 //検索結果を表示する関数
-function result($paper){
+function Result($paper){
     //echo "<br />result";
     //発表場所，発表形式，カテゴリを日本語表記に変換
     $paper = Transform($paper);
     //ジャンルに問わず表示する内容（前半）
-    echo '<div class="container-fluid">
+    echo '<div class="paper-fluid">
         <p>論文タイトル：</p>
         <h3>'.$paper['title'].'</h3>
         <p>著者名：'.$paper['author'].'</p>
@@ -205,8 +205,7 @@ function Transform($paper){
     return($paper);
 }
 ?>
-                </div>
-            </div>
+        </div>
         </div>
         <!-- /#page-content-wrapper -->
     </div>

@@ -61,14 +61,14 @@ for($count = 0; $count < $dataNum; $count++){
     echo ' <li><a href="#smoothplay'.$smoothNum.'">'.$midashi.'</a></li>';
 }
 //htmlタグの表示
-echo '
+echo '<li><a href="yearsort.php">年代順</a></li>
     <li><a href="password.html">論文のアップロード</a></li>
     </ul>
 </div>
 <!-- /#sidebar-wrapper -->
 <!-- Page Content -->
 <div id="page-content-wrapper">
-    <div class="container-fluid">';
+<div class="container-fluid">';
 //右の白い部分（メインの部分）に論文を学会ごとに表示する
 $countEnd = 0;
 for($count = 0; $count < $dataNum; $count++){
@@ -129,7 +129,7 @@ function Result($paper){
     //発表場所，発表形式，カテゴリを日本語表記に変換
     $paper = Transform($paper);
     //ジャンルに問わず表示する内容（前半）
-    echo '<div class="container-fluid">
+    echo '<div class="paper-fluid">
         <p>論文タイトル：</p>
         <h3>'.$paper['title'].'</h3>
         <p>著者名：'.$paper['author'].'</p>
@@ -205,8 +205,7 @@ function Transform($paper){
     return($paper);
 }
 ?>
-                </div>
-            </div>
+        </div>
         </div>
         <!-- /#page-content-wrapper -->
     </div>
