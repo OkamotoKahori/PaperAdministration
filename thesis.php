@@ -32,7 +32,7 @@
                 </li>
 <?php
 //database.txtの内容を検索できる形式に変換
-$paperArray = makePaperArray();
+$paperArray = MakePaperArray();
 //$paperArrayから表示する論文だけを取り出す
 
 //ここから下は表示するページごとに変更する//
@@ -46,12 +46,12 @@ $categoryKey = 'degree';
 //ここから上は表示するページごとに変更する//
 
 //第２引数で指定したkeyごとにソート(このkeyがコンテンツの見出しになる)
-$dataSortArray = categorySort($dataArray,$categoryKey);
+$dataSortArray = CategorySort($dataArray,$categoryKey);
 //見出しごとの論文の数を数える
-$dataCountArray = categoryCount($dataSortArray,$categoryKey);
+$dataCountArray = CategoryCount($dataSortArray,$categoryKey);
 //見出しを配列に入れる
 $dataKeyArray = array_keys($dataCountArray);
-//見出しごとの配列に入っているデータの個数を調べる
+//見出しがいくつあるのかを数える（見出しが入っている配列のデータの個数を調べる）
 $dataNum = count($dataKeyArray);
 //smoothplayするための左の黒い部分の記述
 $countEnd = 0;
@@ -69,7 +69,7 @@ echo '<li><a href="yearsort.php">年代順</a></li>
 <!-- Page Content -->
 <div id="page-content-wrapper">
     <div class="container-fluid">';
-//左の白い部分（メインの部分）に論文を学会ごとに表示する
+//右の白い部分（メインの部分）に論文を学会ごとに表示する
 $countEnd = 0;
 for($count = 0; $count < $dataNum; $count++){
     $midashi = $dataKeyArray[$count];
@@ -77,12 +77,12 @@ for($count = 0; $count < $dataNum; $count++){
     echo ' <h1><div id="smoothplay'.$smoothNum.'">'.$midashi.'</div></h1>';
     for ($count2 = $countEnd; $count2 < $countEnd+$dataCountArray[$midashi]; $count2++) {
         //result($dataSortArray[$count2]);
-        //修士論文または学士論文だけが入っている配列を作る
+        //見出し１つ分の論文だけが入っている配列を作る
         $yearSortArray[] = $dataSortArray[$count2];
     }
-    //修士論文または学士論文だけが入っている配列を年代順にソート
-    $yearSortArray = categorySort($yearSortArray,'year');
-    //修士論文または学士論文だけが入っている配列を年代順にソートした配列を年代順に表示
+    //見出し１つ分の論文だけが入っている配列を年代順にソート
+    $yearSortArray = CategorySort($yearSortArray,'year');
+    //見出し１つ分の論文だけが入っている配列を年代順にソートした配列を年代順に表示
     foreach ($yearSortArray as $paper) {
         result($paper);
     }
@@ -90,7 +90,7 @@ for($count = 0; $count < $dataNum; $count++){
     $countEnd = $dataCountArray[$midashi];
 }
 //database.txtの内容を検索できる形式に変換する関数
-function makePaperArray(){
+function MakePaperArray(){
     //echo "<br />makeData";
     //database.txtの内容を$databaseに格納
     $database = file_get_contents("database.txt");
@@ -104,8 +104,8 @@ function makePaperArray(){
     return($paperArray);
 }
 //降順にソート
-function categorySort($dataArray,$category){
-    //echo "<br />categorySort";
+function CategorySort($dataArray,$category){
+    //echo "<br />CategorySort";
     foreach ($dataArray as $key => $value) {
         $categoryKey[$key] = $value[$category];
     }
@@ -114,8 +114,8 @@ function categorySort($dataArray,$category){
     return($dataArray);
 }
 //見出し以下の個数をカウント
-function categoryCount($paperArray,$category){
-    //echo "<br />categoryCount";
+function CategoryCount($paperArray,$category){
+    //echo "<br />CategoryCount";
     foreach ($paperArray as $key => $value) {
         $categoryKey[$key] = $value[$category];
     }
