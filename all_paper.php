@@ -64,7 +64,8 @@ $categoryKey = 'genre';
 //ここから上は表示するページごとに変更する//
 
 //第２引数で指定したkeyごとにソート(このkeyがコンテンツの見出しになる)
-$dataSortArray = CategorySort($dataArray,$categoryKey);
+//$dataSortArray = CategorySort($dataArray,$categoryKey);
+$dataSortArray = $dataArray;
 //見出しごとの論文の数を数える
 $dataCountArray = CategoryCount($dataSortArray,$categoryKey);
 //見出しを配列に入れる
@@ -105,7 +106,7 @@ for($count = 0; $count < $dataNum; $count++){
         Result($paper);
     }
     $yearSortArray = array();
-    $countEnd = $dataCountArray[$midashi];
+    $countEnd = $countEnd + $dataCountArray[$midashi];
 }
 //database.txtの内容を検索できる形式に変換する関数
 function MakePaperArray(){
