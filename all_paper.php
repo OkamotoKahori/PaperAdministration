@@ -1,3 +1,8 @@
+<?php
+
+?>
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -25,68 +30,85 @@
                         論文管理システム
                     </a>
                 </li>
-                <li>
-                    <a href="#smoothplay1">国内発表</a>
-                </li>
-                <li>
-                    <a href="#smoothplay2">国際会議</a>
-                </li>
-                <li>
-                    <a href="#smoothplay3">論文誌</a>
-                </li>
-                <li>
-                    <a href="#smoothplay4">学位論文</a>
-                </li>
-                <li>
-                    <a href="#smoothplay5">受賞</a>
-                </li>
-                <li>
-                    <a href="#smoothplay6">報道</a>
-                </li>
-                <li>
-                    <a href="password.html">論文のアップロード</a>
-                </li>
-            </ul>
-        </div>
-        <!-- /#sidebar-wrapper -->
-        <!-- Page Content -->
-        <div id="page-content-wrapper">
-            <div class="container-fluid">
 <?php
 //database.txtの内容を検索できる形式に変換
-$paperArray = makePaperArray();
-//var_dump($paperArray);
-//$dataArray = array();
-foreach ($paperArray as $paper) {
-    if($paper['genre'] == 0){
-        if($paper['location'] == "Japan"){
-            $paperJapan[] = $paper;
-        }elseif($paper['location'] == "Outside"){
-            $paperOutside[] = $paper;
-        }
-    }elseif($paper['genre'] == 1){
-        $paper1[] = $paper;
-    }elseif($paper['genre'] == 2){
-        $paper2[] = $paper;
-    }else{
+$paperArray = MakePaperArray();
+//$paperArrayから表示する論文だけを取り出す
 
+//ここから下は表示するページごとに変更する//
+//$paperArrayから表示する論文だけを取り出す
+$dataArray = array();
+foreach ($paperArray as $paper) {
+    if($paper['genre'] == 0 && $paper['location'] == 'Japan'){
+        $paper['genre'] = '国内発表';
+        $Array0[] = $paper;
+    }elseif($paper['genre'] == 0 && $paper['location'] == 'Outside'){
+        $paper['genre'] = '国際会議';
+        $Array1[] = $paper;
+    }elseif($paper['genre'] == 1){
+        $paper['genre'] = '論文誌';
+        $Array2[] = $paper;
+    }elseif($paper['genre'] == 2){
+        $paper['genre'] = '学位論文';
+        $Array3[] = $paper;
     }
 }
-Contents($paperJapan,1,'国内発表');
-Contents($paperOutside,2,'国際会議');
-Contents($paper1,3,'論文誌');
-Contents($paper2,4,'学位論文');
-echo '<h1><div id="smoothplay5">受賞</div></h1>';
-echo '<h1><div id="smoothplay6">報道</div></h1>';
-//表示する
-function Contents($paperArray,$num,$tag){
-    echo '<h1><div id="smoothplay'.$num.'">'.$tag.'</div></h1>';
-    foreach ($paperArray as $paper) {
-        result($paper);
+$dataArraySet = array($Array0,$Array1,$Array2,$Array3);
+for($i=0;$i<4;$i++){
+    if(isset($dataArraySet[$i])){
+        $dataArray = array_merge($dataArray,$dataArraySet[$i]);
     }
+}
+//ソートしたいカテゴリ（key）を指定
+$categoryKey = 'genre';
+//ここから上は表示するページごとに変更する//
+
+//第２引数で指定したkeyごとにソート(このkeyがコンテンツの見出しになる)
+$dataSortArray = CategorySort($dataArray,$categoryKey);
+//見出しごとの論文の数を数える
+$dataCountArray = CategoryCount($dataSortArray,$categoryKey);
+//見出しを配列に入れる
+$dataKeyArray = array_keys($dataCountArray);
+//見出しがいくつあるのかを数える（見出しが入っている配列のデータの個数を調べる）
+$dataNum = count($dataKeyArray);
+//smoothplayするための左の黒い部分の記述
+$countEnd = 0;
+for($count = 0; $count < $dataNum; $count++){
+    $midashi = $dataKeyArray[$count];
+    $smoothNum = $count+1;
+    echo ' <li><a href="#smoothplay'.$smoothNum.'">'.$midashi.'</a></li>';
+}
+//htmlタグの表示
+echo '<li><a href="yearsort.php">年代順</a></li>
+    <li><a href="password.html">論文のアップロード</a></li>
+    </ul>
+</div>
+<!-- /#sidebar-wrapper -->
+<!-- Page Content -->
+<div id="page-content-wrapper">
+<div class="container-fluid">';
+//右の白い部分（メインの部分）に論文を学会ごとに表示する
+$countEnd = 0;
+for($count = 0; $count < $dataNum; $count++){
+    $midashi = $dataKeyArray[$count];
+    $smoothNum = $count+1;
+    echo ' <h1><div id="smoothplay'.$smoothNum.'">'.$midashi.'</div></h1>';
+    for ($count2 = $countEnd; $count2 < $countEnd+$dataCountArray[$midashi]; $count2++) {
+        //result($dataSortArray[$count2]);
+        //見出し１つ分の論文だけが入っている配列を作る
+        $yearSortArray[] = $dataSortArray[$count2];
+    }
+    //見出し１つ分の論文だけが入っている配列を年代順にソート
+    $yearSortArray = CategorySort($yearSortArray,'year');
+    //見出し１つ分の論文だけが入っている配列を年代順にソートした配列を年代順に表示
+    foreach ($yearSortArray as $paper) {
+        Result($paper);
+    }
+    $yearSortArray = array();
+    $countEnd = $dataCountArray[$midashi];
 }
 //database.txtの内容を検索できる形式に変換する関数
-function makePaperArray(){
+function MakePaperArray(){
     //echo "<br />makeData";
     //database.txtの内容を$databaseに格納
     $database = file_get_contents("database.txt");
@@ -99,15 +121,37 @@ function makePaperArray(){
     }
     return($paperArray);
 }
+//降順にソート
+function CategorySort($dataArray,$category){
+    //echo "<br />CategorySort";
+    foreach ($dataArray as $key => $value) {
+        $categoryKey[$key] = $value[$category];
+    }
+    array_multisort($categoryKey ,SORT_DESC, $dataArray);
+    //var_dump($dataArray);
+    return($dataArray);
+}
+//見出し以下の個数をカウント
+function CategoryCount($paperArray,$category){
+    //echo "<br />CategoryCount";
+    foreach ($paperArray as $key => $value) {
+        $categoryKey[$key] = $value[$category];
+    }
+    $dataCountArray = array_count_values($categoryKey);
+    //var_dump($dataCount);
+    return($dataCountArray);
+}
 //検索結果を表示する関数
-function result($paper,$tag){
+function Result($paper){
     //echo "<br />result";
     //発表場所，発表形式，カテゴリを日本語表記に変換
     $paper = Transform($paper);
     //ジャンルに問わず表示する内容（前半）
-    echo '<p>論文タイトル：</p>
+    echo '<div class="paper-fluid">
+        <p>論文タイトル：</p>
         <h3>'.$paper['title'].'</h3>
-        <p>著者名：'.$paper['author'].'</p>';
+        <p>著者名：'.$paper['author'].'</p>
+        <p>学位：'.$paper['degree'].'</p>';
     if($paper['genre']==2){
         //修論・卒論の表示
         echo '<p>発表年：'.$paper['year'].'</p>';
@@ -120,7 +164,6 @@ function result($paper,$tag){
         }
         echo '<p>場所：'.$paper['location'].'</p>
             <p>発表形態：'.$paper['form'].'</p>
-            <p>学位：'.$paper['degree'].'</p>
             <p>Vol.：'.$paper['volume'].'</p>
             <p>No.：'.$paper['number'].'</p>
             <p>pp.：'.$paper['pages_s']."-".$paper['pages_e'].'</p>
@@ -130,7 +173,8 @@ function result($paper,$tag){
     //ジャンルに問わず表示する内容（後半）
     echo '<p>キーワード：'.$paper['keyword'].'</p>
         <p>研究分野：'.$paper['category'].'</p>
-        <p>PDFファイル：'.$paper['filename'].'</p>';
+        <p>PDFファイル：'.$paper['filename'].'</p>
+        </div>';
 }
 //発表場所，発表形式，学位，カテゴリを日本語表記に変換する関数
 function Transform($paper){
@@ -178,7 +222,7 @@ function Transform($paper){
     return($paper);
 }
 ?>
-            </div>
+        </div>
         </div>
         <!-- /#page-content-wrapper -->
     </div>
