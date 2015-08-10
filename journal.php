@@ -36,17 +36,39 @@ $paperArray = MakePaperArray();
 //$paperArrayから表示する論文だけを取り出す
 
 //ここから下は表示するページごとに変更する//
+//$paperArrayから表示する論文だけを取り出す
+$dataArray = array();
 foreach ($paperArray as $paper) {
-    if($paper['genre'] == 1){
-        $dataArray[] = $paper;
+    if($paper['genre'] == 0 && $paper['location'] == 'Japan'){
+        //$paper['genre'] = '国内発表';
+        $Array0[] = $paper;
+    }elseif($paper['genre'] == 0 && $paper['location'] == 'Outside'){
+        //$paper['genre'] = '国際会議';
+        $Array1[] = $paper;
+    }elseif($paper['genre'] == 1){
+        //$paper['genre'] = '論文誌';
+        $Array2[] = $paper;
+    }elseif($paper['genre'] == 2){
+        //$paper['genre'] = '学位論文';
+        $Array3[] = $paper;
     }
 }
+/*
+$dataArraySet = array($Array0,$Array1,$Array2,$Array3);
+for($i=0;$i<4;$i++){
+    if(isset($dataArraySet[$i])){
+        $dataArray = array_merge($dataArray,$dataArraySet[$i]);
+    }
+}
+*/
+$dataArray = $Array2;
 //ソートしたいカテゴリ（key）を指定
 $categoryKey = 'journal';
 //ここから上は表示するページごとに変更する//
 
 //第２引数で指定したkeyごとにソート(このkeyがコンテンツの見出しになる)
 $dataSortArray = CategorySort($dataArray,$categoryKey);
+//$dataSortArray = $dataArray;
 //見出しごとの論文の数を数える
 $dataCountArray = CategoryCount($dataSortArray,$categoryKey);
 //見出しを配列に入れる
@@ -62,6 +84,7 @@ for($count = 0; $count < $dataNum; $count++){
 }
 //htmlタグの表示
 echo '<li><a href="yearsort.php">年代順</a></li>
+    <li><a href="index.html">Topへ戻る</a></li>
     <li><a href="password.html">論文のアップロード</a></li>
     </ul>
 </div>
@@ -87,7 +110,7 @@ for($count = 0; $count < $dataNum; $count++){
         Result($paper);
     }
     $yearSortArray = array();
-    $countEnd = $dataCountArray[$midashi];
+    $countEnd = $countEnd + $dataCountArray[$midashi];
 }
 //database.txtの内容を検索できる形式に変換する関数
 function MakePaperArray(){
@@ -146,7 +169,6 @@ function Result($paper){
         }
         echo '<p>場所：'.$paper['location'].'</p>
             <p>発表形態：'.$paper['form'].'</p>
-            <p>学位：'.$paper['degree'].'</p>
             <p>Vol.：'.$paper['volume'].'</p>
             <p>No.：'.$paper['number'].'</p>
             <p>pp.：'.$paper['pages_s']."-".$paper['pages_e'].'</p>

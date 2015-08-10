@@ -81,6 +81,7 @@ for($count = 0; $count < $dataNum; $count++){
 }
 //htmlタグの表示
 echo '<li><a href="yearsort.php">年代順</a></li>
+    <li><a href="index.html">Topへ戻る</a></li>
     <li><a href="password.html">論文のアップロード</a></li>
     </ul>
 </div>
