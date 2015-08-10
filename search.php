@@ -26,9 +26,108 @@
                         論文管理システム
                     </a>
                 <li>
-                    <a href="all_paper.html">すべて</a>
+                    <a href="all_paper.php">すべて</a>
                 </li>
-                <div class="space"></div>
+<?php
+//database.txtの内容を検索できる形式に変換
+$paperArray = MakePaperArray();
+//ここから下は表示するページごとに変更する//
+//入力された情報を取得
+$query = htmlspecialchars($_POST['query']);
+$refine = htmlspecialchars($_POST['refine']);
+$category = htmlspecialchars($_POST['category']);
+//database.texに含まれるデータの個数(arrayの数)を数える
+$dataCount = count($paperArray);
+//検索して，表示する論文だけを入れた配列を作り，ソート関数に渡す
+//クエリが入力されているかどうかを判断
+if(empty($query)){
+    //クエリが入力されていない場合
+    //カテゴリの指定があるかどうかを判断
+    foreach ($paperArray as $paper) {
+        if($category == "all"){
+            //全ての論文を表示する
+            //Result($paper);
+            $dataArray[] = $paper;
+        }elseif($category == $paper['category']){
+            //指定されたカテゴリの論文を表示する
+            //Result($paper);
+            $dataArray[] = $paper;
+        }else{
+            //指定されたカテゴリの論文がなかった場合
+            //$not = NotPaper($not,$dataCount);
+            $not++;
+        }
+    }
+}else{
+    //クエリが入力されている場合
+    //クエリの種類（ラジオボタン）がどれかを判断
+    if($refine == 's_author'){
+        //著者の場合
+        $targetKey = 'author';
+    }elseif($refine == 's_keyword'){
+        //キーワードの場合
+        $targetKey = 'keyword';
+    }else{
+        //すべての場合
+        $targetKey = 'free';
+    }
+    //検索する
+    foreach ($paperArray as $paper) {
+        if($targetKey == "free"){
+            //すべての情報を１つの文字列にする
+            $targetStrings = $paper['title'].$paper['author'].$paper['year'].$paper['journal'].$paper['location'].$paper['form'].$paper['keyword'];
+            //$not = StringSearch($targetStrings,$query,$paper,$not,$dataCount);
+        }else{
+            if($category == "all"){
+                $targetStrings = $paper[$targetKey];
+                //$not = StringSearch($targetStrings,$query,$paper,$not,$dataCount);
+            }elseif($category == $paper['category']){
+                $targetStrings = $paper[$targetKey];
+                //$not = StringSearch($paper[$targetKey],$query,$paper,$not,$dataCount);
+            }else{
+                //$not = NotPaper($not,$dataCount);
+                $not++;
+            }
+        }
+        $paperResult = StringSearch($targetStrings,$query,$paper);
+        if($paperResult == 'Paper'){
+            $dataArray[] = $paper;
+        }else{
+            $not++;
+        }
+    }
+}
+/*
+//ソートするための配列をつくる
+$dataArraySet = array($Array0,$Array1,$Array2,$Array3);
+for($i=0;$i<4;$i++){
+    if(isset($dataArraySet[$i])){
+        $dataArray = array_merge($dataArray,$dataArraySet[$i]);
+    }
+}
+*/
+//ソートしたいカテゴリ（key）を指定
+$categoryKey = 'year';
+//ここから上は表示するページごとに変更する//
+
+//第２引数で指定したkeyごとにソート(このkeyがコンテンツの見出しになる)
+$dataSortArray = CategorySort($dataArray,$categoryKey);
+//$dataSortArray = $dataArray;
+//見出しごとの論文の数を数える
+$dataCountArray = CategoryCount($dataSortArray,$categoryKey);
+//見出しを配列に入れる
+$dataKeyArray = array_keys($dataCountArray);
+//見出しがいくつあるのかを数える（見出しが入っている配列のデータの個数を調べる）
+$dataNum = count($dataKeyArray);
+//smoothplayするための左の黒い部分の記述
+$countEnd = 0;
+for($count = 0; $count < $dataNum; $count++){
+    $midashi = $dataKeyArray[$count];
+    $smoothNum = $count+1;
+    echo ' <li><a href="#smoothplay'.$smoothNum.'">'.$midashi.'</a></li>';
+}
+//htmlタグの表示
+echo '<div class="space"></div>
                 <form action="search.php" method="post" enctype="multipart/form-data" accept-charset="utf-8">
                     <li>
                         <font color="white">絞り込み検索</font>
@@ -60,79 +159,34 @@
                     </select>
                     <input type="submit" name="r_submit" value="検索">
                 </form>
-                <li>
-                    <a href="index.html">Topへ戻る</a>
-                </li>
-                <div class="space"></div>
-                <li>
-                    <a href="password.html">論文のアップロード</a>
-                </li>
             </ul>
         </div>
         <!-- /#sidebar-wrapper -->
         <!-- Page Content -->
         <div id="page-content-wrapper">
-        <!-- ここに検索結果が表示されます -->
-<?php
-//database.txtの内容を検索できる形式に変換
-$paperArray = makePaperArray();
-//入力された情報を取得
-$query = htmlspecialchars($_POST['query']);
-$refine = htmlspecialchars($_POST['refine']);
-$category = htmlspecialchars($_POST['category']);
-//database.texに含まれるデータの個数(arrayの数)を数える
-$dataCount = count($paperArray);
-//検索する
-//クエリが入力されているかどうかを判断
-if(empty($query)){
-    //クエリが入力されていない場合
-    //カテゴリの指定があるかどうかを判断
-    foreach ($paperArray as $paper) {
-        if($category == "all"){
-            //全ての論文を表示する
-            result($paper);
-        }elseif($category == $paper['category']){
-            //指定されたカテゴリの論文を表示する
-            result($paper);
-        }else{
-            //指定されたカテゴリの論文がなかった場合
-            $not = notPaper($not,$dataCount);
-        }
+        <!-- ここに検索結果が表示されます -->';
+//右の白い部分（メインの部分）に論文を学会ごとに表示する
+$countEnd = 0;
+for($count = 0; $count < $dataNum; $count++){
+    $midashi = $dataKeyArray[$count];
+    $smoothNum = $count+1;
+    echo ' <h1><div id="smoothplay'.$smoothNum.'">'.$midashi.'</div></h1>';
+    for ($count2 = $countEnd; $count2 < $countEnd+$dataCountArray[$midashi]; $count2++) {
+        //result($dataSortArray[$count2]);
+        //見出し１つ分の論文だけが入っている配列を作る
+        $yearSortArray[] = $dataSortArray[$count2];
     }
-}else{
-    //クエリが入力されている場合
-    //クエリの種類（ラジオボタン）がどれかを判断
-    if($refine == 's_author'){
-        //著者の場合
-        $targetKey = 'author';
-    }elseif($refine == 's_keyword'){
-        //キーワードの場合
-        $targetKey = 'keyword';
-    }else{
-        //すべての場合
-        $targetKey = 'free';
+    //見出し１つ分の論文だけが入っている配列を年代順にソート
+    $yearSortArray = CategorySort($yearSortArray,'genre');
+    //見出し１つ分の論文だけが入っている配列を年代順にソートした配列を年代順に表示
+    foreach ($yearSortArray as $paper) {
+        Result($paper);
     }
-    //検索する
-    foreach ($paperArray as $paper) {
-        if($targetKey == "free"){
-            //すべての情報を１つの文字列にする
-            $targetStrings = $paper['title'].$paper['author'].$paper['year'].$paper['journal'].$paper['location'].$paper['form'].$paper['keyword'];
-            $not = stringSearch($targetStrings,$query,$paper,$not,$dataCount);
-        }else{
-            if($category == "all"){
-                $targetStrings = $paper[$targetKey];
-                $not = stringSearch($targetStrings,$query,$paper,$not,$dataCount);
-            }elseif($category == $paper['category']){
-                $targetStrings = $paper[$targetKey];
-                $not = stringSearch($paper[$targetKey],$query,$paper,$not,$dataCount);
-            }else{
-                $not = notPaper($not,$dataCount);
-            }
-        }
-    }
+    $yearSortArray = array();
+    $countEnd = $countEnd + $dataCountArray[$midashi];
 }
 //database.txtの内容を検索できる形式に変換する関数
-function makePaperArray(){
+function MakePaperArray(){
     //echo "<br />makeData";
     //database.txtの内容を$databaseに格納
     $database = file_get_contents("database.txt");
@@ -146,22 +200,24 @@ function makePaperArray(){
     return($paperArray);
 }
 //入力された文字列で$paper内の著者名orキーワードを検索する関数
-function stringSearch($targetStrings,$query,$paper,$not,$dataCount){
+function StringSearch($targetStrings,$query,$paper,$not,$dataCount){
     //echo "<br />stringSearch";
     if(strpos($targetStrings, $query) === FALSE){
-        $not = notPaper($not,$dataCount);
-        return($not);
+        //$not = NotPaper($not,$dataCount);
+        //return($not);
+        return('notPaper');
     }else{
         //検索結果を表示する
-        result($paper);
+        //Result($paper);
+        return('Paper');
     }
 }
 //データベース内に論文があるかをチェックする関数
-function notPaper($not,$dataCount){
+function NotPaper($not,$dataCount){
     //echo "<br />notPaper";
     //echo "<br />".$not."-".$dataCount;
     //データベース内に論文があるかをチェック
-    $not++;
+    //$not++;
     if($not >= $dataCount){
         echo '<div class="container-fluid">
             <h1>お探しの論文はみつかりませんでした</h1>
@@ -169,16 +225,37 @@ function notPaper($not,$dataCount){
     }
     return($not);
 }
+//降順にソート
+function CategorySort($dataArray,$category){
+    //echo "<br />CategorySort";
+    foreach ($dataArray as $key => $value) {
+        $categoryKey[$key] = $value[$category];
+    }
+    array_multisort($categoryKey ,SORT_DESC, $dataArray);
+    //var_dump($dataArray);
+    return($dataArray);
+}
+//見出し以下の個数をカウント
+function CategoryCount($paperArray,$category){
+    //echo "<br />CategoryCount";
+    foreach ($paperArray as $key => $value) {
+        $categoryKey[$key] = $value[$category];
+    }
+    $dataCountArray = array_count_values($categoryKey);
+    //var_dump($dataCount);
+    return($dataCountArray);
+}
 //検索結果を表示する関数
-function result($paper){
+function Result($paper){
     //echo "<br />result";
     //発表場所，発表形式，カテゴリを日本語表記に変換
     $paper = Transform($paper);
     //ジャンルに問わず表示する内容（前半）
-    echo '<div class="container-fluid">
+    echo '<div class="paper-fluid">
         <p>論文タイトル：</p>
         <h3>'.$paper['title'].'</h3>
-        <p>著者名：'.$paper['author'].'</p>';
+        <p>著者名：'.$paper['author'].'</p>
+        <p>学位：'.$paper['degree'].'</p>';
     if($paper['genre']==2){
         //修論・卒論の表示
         echo '<p>発表年：'.$paper['year'].'</p>';
@@ -191,7 +268,6 @@ function result($paper){
         }
         echo '<p>場所：'.$paper['location'].'</p>
             <p>発表形態：'.$paper['form'].'</p>
-            <p>学位：'.$paper['degree'].'</p>
             <p>Vol.：'.$paper['volume'].'</p>
             <p>No.：'.$paper['number'].'</p>
             <p>pp.：'.$paper['pages_s']."-".$paper['pages_e'].'</p>
