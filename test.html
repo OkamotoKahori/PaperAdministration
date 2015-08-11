@@ -8,14 +8,36 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="css/simple-sidebar.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="main.css">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
     <title>PHP入門</title>
+    <script type="text/javascript">
+        function Ajax(pageTitle){
+            console.log("Ajax.js");
+            $(".paper-fluid p").empty();
+            console.log(pageTitle);
+            var query = document.search.query.value;
+            var refine = document.search.refine.value;
+            var category = document.search.category.value;
+            console.log(query);
+            console.log(refine);
+            console.log(category);
+            $.ajax({
+                type: "POST",
+                url: "ThisPageContent.php",
+                data: {pageTitle:pageTitle,queryValue:query,queryRefine:refine,queryCategory:category},
+                success: function(paper) {
+                    $(".paper-fluid p").append(paper);
+                    console.log("paper");
+                }
+            });
+            console.log("ajax.js");
+        }
+    </script>
+    <!--<script src="ajax.js"></script>-->
 </head>
-
 <body>
     <div id="wrapper">
         <!-- Sidebar -->
@@ -27,31 +49,29 @@
                     </a>
                 </li>
                 <li>
-                    <a href="test.html">テスト</a>
+                    <a href="#" onClick="Ajax('all_paper');">すべて</a>
                 </li>
                 <li>
-                    <a href="all_paper.php">すべて</a>
+                    <a href="#" onClick="Ajax('national');">国内発表</a>
                 </li>
                 <li>
-                    <a href="national.php">国内発表</a>
+                    <a href="#" onClick="Ajax('international');">国際会議</a>
                 </li>
                 <li>
-                    <a href="international.php">国際会議</a>
+                    <a href="#" onClick="Ajax('journal');">論文誌</a>
                 </li>
                 <li>
-                    <a href="journal.php">論文誌</a>
+                    <a href="#" onClick="Ajax('tesis');">学位論文</a>
                 </li>
                 <li>
-                    <a href="thesis.php">学位論文</a>
+                    <a href="#" onClick="Ajax('award');">受賞</a>
                 </li>
                 <li>
-                    <a href="award.html">受賞</a>
-                </li>
-                <li>
-                    <a href="press.html">報道</a>
+                    <a href="#" onClick="Ajax('press');">報道</a>
                 </li>
                 <div class="space"></div>
-                <form action="search.php" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+                <!--<form action="search.php" method="post" enctype="multipart/form-data" accept-charset="utf-8">-->
+                <form name="search">
                     <li>
                         <font color="white">絞り込み検索</font>
                     </li>
@@ -80,41 +100,27 @@
                         <option value="Comic">コミック工学</option>
                         <option value="Onomatopoeia">オノマトペ</option>
                     </select>
-                    <input type="submit" name="r_submit" value="検索">
+                    <input onClick="Ajax('search');" type="button" name="r_submit" value="検索">
+                    <!--<input type="button" name="search" value="検索" onClick="Ajax('search');">-->
                 </form>
                 <div class="space"></div>
                 <li>
                     <a href="password.html">論文のアップロード</a>
                 </li>
+                <!--
+                <div class="index-fluid">
+                    <p></p>
+                </div>
+            -->
             </ul>
         </div>
         <!-- /#sidebar-wrapper -->
         <!-- Page Content -->
         <div id="page-content-wrapper">
             <div class="container-fluid">
-                <h1>What's new!</h1>
-                <p>以下の論文がアップロードされました</p>
-                <div class="WhatsNew">
+                <div class="paper-fluid">
                     <p></p>
                 </div>
-                <!-- What's New!用 -->
-                <script type="text/javascript">
-                // テキストファイルを最新のものが上になるように逆順に並べて表示する
-                $(function() {
-                    $.ajax({
-                        url: 'WhatsNew.txt',
-                        success: function(data) {
-                            var data_array = data.split(/\r\n|\r|\n/); //改行コードで分割
-                            var len = data_array.length;
-                            for (var i = len - 1; i >= 0; i--) {
-                                console.log(data_array[i]);
-                                $(".WhatsNew p").append(data_array[i] + "<br />");
-
-                            }
-                        }
-                    });
-                });
-                </script>
             </div>
         </div>
         <!-- /#page-content-wrapper -->
@@ -132,5 +138,4 @@
     });
     </script>
 </body>
-
 </html>

@@ -25,9 +25,6 @@
                     <a href="/PaperAdministration/">
                         論文管理システム
                     </a>
-                <li>
-                    <a href="all_paper.php">すべて</a>
-                </li>
 <?php
 //database.txtの内容を検索できる形式に変換
 $paperArray = MakePaperArray();

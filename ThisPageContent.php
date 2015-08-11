@@ -1,97 +1,67 @@
 <?php
-
-?>
-
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-
-<head>
-    <meta http-equiv="Content-Type" constent="text/html; charset=UTF-8" />
-    <script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
-    <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="css/simple-sidebar.css" rel="stylesheet">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>PHP入門</title>
-</head>
-
-<body>
-    <div id="wrapper">
-        <!-- Sidebar -->
-        <div id="sidebar-wrapper">
-            <ul class="sidebar-nav">
-                <li class="sidebar-brand">
-                    <a href="/PaperAdministration/">
-                        論文管理システム
-                    </a>
-                </li>
-<?php
+//Topページでクリックした項目を取得
+$pageTitle = $_POST['pageTitle'];
+//echo $pageTitle;
 //database.txtの内容を検索できる形式に変換
 $paperArray = MakePaperArray();
 //$paperArrayから表示する論文だけを取り出す
+$dataArray = array();
 
 //ここから下は表示するページごとに変更する//
-//$paperArrayから表示する論文だけを取り出す
-$dataArray = array();
-foreach ($paperArray as $paper) {
-    if($paper['genre'] == 0 && $paper['location'] == 'Japan'){
-        //$paper['genre'] = '国内発表';
-        $Array0[] = $paper;
-    }elseif($paper['genre'] == 0 && $paper['location'] == 'Outside'){
-        //$paper['genre'] = '国際会議';
-        $Array1[] = $paper;
-    }elseif($paper['genre'] == 1){
-        //$paper['genre'] = '論文誌';
-        $Array2[] = $paper;
-    }elseif($paper['genre'] == 2){
-        //$paper['genre'] = '学位論文';
-        $Array3[] = $paper;
-    }
-}
-/*
-$dataArraySet = array($Array0,$Array1,$Array2,$Array3);
-for($i=0;$i<4;$i++){
-    if(isset($dataArraySet[$i])){
-        $dataArray = array_merge($dataArray,$dataArraySet[$i]);
-    }
-}
-*/
-$dataArray = $Array2;
 //ソートしたいカテゴリ（key）を指定
-$categoryKey = 'journal';
+$categoryKey = 'genre';
+//ページごとに表示する論文を$dataArrayに入れる
+if($pageTitle == 'search'){
+    //入力された情報を取得
+    $query = htmlspecialchars($_POST['queryValue']);
+    $refine = htmlspecialchars($_POST['queryRefine']);
+    $category = htmlspecialchars($_POST['queryCategory']);
+    //echo $query.$refine.$category;
+    //echo "<br />";
+    $dataArray = Search($paperArray,$query,$refine,$category);
+    //第２引数で指定したkeyごとにソート(このkeyがコンテンツの見出しになる)
+    $dataSortArray = CategorySort($dataArray,$categoryKey);
+}else{
+    //$paperArrayから表示する論文だけを取り出す
+    foreach ($paperArray as $paper) {
+        $paper = Transform($paper);
+        if($paper['genre'] == '国内発表' && $paper['location'] == '国内'){
+            $Array0[] = $paper;
+        }elseif($paper['genre'] == '国際会議' && $paper['location'] == '国外'){
+            $Array1[] = $paper;
+        }elseif($paper['genre'] == '論文誌'){
+            $Array2[] = $paper;
+        }elseif($paper['genre'] == '学位論文'){
+            $Array3[] = $paper;
+        }
+    }
+    if($pageTitle == 'national'){
+        $dataArray = $Array0;
+    }elseif($pageTitle == 'international'){
+        $dataArray = $Array1;
+    }elseif($pageTitle == 'journal'){
+        $dataArray = $Array2;
+    }elseif($pageTitle == 'tesis'){
+        $dataArray = $Array3;
+    }else{
+        $dataArraySet = array($Array0,$Array1,$Array2,$Array3);
+        for($i=0;$i<4;$i++){
+            if(isset($dataArraySet[$i])){
+                $dataArray = array_merge($dataArray,$dataArraySet[$i]);
+            }
+        }
+    }
+    //第２引数で指定したkeyごとにソート(このkeyがコンテンツの見出しになる)
+    $dataSortArray = $dataArray;
+}
 //ここから上は表示するページごとに変更する//
 
-//第２引数で指定したkeyごとにソート(このkeyがコンテンツの見出しになる)
-$dataSortArray = CategorySort($dataArray,$categoryKey);
-//$dataSortArray = $dataArray;
 //見出しごとの論文の数を数える
 $dataCountArray = CategoryCount($dataSortArray,$categoryKey);
 //見出しを配列に入れる
 $dataKeyArray = array_keys($dataCountArray);
 //見出しがいくつあるのかを数える（見出しが入っている配列のデータの個数を調べる）
 $dataNum = count($dataKeyArray);
-//smoothplayするための左の黒い部分の記述
-$countEnd = 0;
-for($count = 0; $count < $dataNum; $count++){
-    $midashi = $dataKeyArray[$count];
-    $smoothNum = $count+1;
-    echo ' <li><a href="#smoothplay'.$smoothNum.'">'.$midashi.'</a></li>';
-}
-//htmlタグの表示
-echo '<li><a href="yearsort.php">年代順</a></li>
-    <li><a href="index.html">Topへ戻る</a></li>
-    <li><a href="password.html">論文のアップロード</a></li>
-    </ul>
-</div>
-<!-- /#sidebar-wrapper -->
-<!-- Page Content -->
-<div id="page-content-wrapper">
-<div class="container-fluid">';
 //右の白い部分（メインの部分）に論文を学会ごとに表示する
 $countEnd = 0;
 for($count = 0; $count < $dataNum; $count++){
@@ -125,6 +95,70 @@ function MakePaperArray(){
         eval('$paperArray[] = '.$data.';');
     }
     return($paperArray);
+echo '</div></div>';
+}
+//検索する関数
+function Search($paperArray,$query,$refine,$category){
+    //クエリが入力されているかどうかを判断
+    if(empty($query)){
+        //クエリが入力されていない場合
+        //カテゴリの指定があるかどうかを判断
+        foreach ($paperArray as $paper) {
+            if($category == "all"){
+                //全ての論文を表示する
+                //Result($paper);
+                $paper = Transform($paper);
+                $dataArray[] = $paper;
+            }elseif($category == $paper['category']){
+                //指定されたカテゴリの論文を表示する
+                //Result($paper);
+                $paper = Transform($paper);
+                $dataArray[] = $paper;
+            }else{
+                //指定されたカテゴリの論文がなかった場合
+                //$not = NotPaper($not,$dataCount);
+                $not++;
+            }
+        }
+    }else{
+        //クエリが入力されている場合
+        //クエリの種類（ラジオボタン）がどれかを判断
+        if($refine == 's_author'){
+            //著者の場合
+            $targetKey = 'author';
+        }elseif($refine == 's_keyword'){
+            //キーワードの場合
+            $targetKey = 'keyword';
+        }else{
+            //すべての場合
+            $targetKey = 'free';
+        }
+        //検索する
+        foreach ($paperArray as $paper) {
+            $paper = Transform($paper);
+            if($targetKey == "free"){
+                //すべての情報を１つの文字列にする
+                $paper = Transform($paper);
+                $targetStrings = $paper['title'].$paper['author'].$paper['year'].$paper['journal'].$paper['location'].$paper['form'].$paper['keyword'];
+            }else{
+                if($category == "all"){
+                    $targetStrings = $paper[$targetKey];
+                }elseif($category == $paper['category']){
+                    $targetStrings = $paper[$targetKey];
+                }else{
+                    $not++;
+                }
+            }
+            $paperResult = StringSearch($targetStrings,$query,$paper);
+            if($paperResult == 'Paper'){
+                $paper = Transform($paper);
+                $dataArray[] = $paper;
+            }else{
+                $not++;
+            }
+        }
+    }
+    return($dataArray);
 }
 //降順にソート
 function CategorySort($dataArray,$category){
@@ -184,12 +218,24 @@ function Result($paper){
 //発表場所，発表形式，学位，カテゴリを日本語表記に変換する関数
 function Transform($paper){
     //echo "<br />Transform";
+    //ジャンルを日本語表記に変換する
+    if($paper['genre'] == 0){
+        if($paper['location'] == 'Japan' || $paper['location'] == '国内'){
+            $paper['genre'] = "国内発表";
+        }else{
+            $paper['genre'] = "国際会議";
+        }
+    }elseif($paper['genre'] == 1){
+        $paper['genre'] = "論文誌";
+    }elseif($paper['genre'] == 2){
+        $paper['genre'] = "学位論文";
+    }
     //学位を日本語表記に変換する
-    if($paper['degree'] == "Bachelor"){
+    if($paper['degree'] == "Bachelor" || $paper['degree'] == "学士"){
         $paper['degree'] = "学士";
-    }elseif($paper['degree'] == "Master"){
+    }elseif($paper['degree'] == "Master" || $paper['degree'] == "修士"){
         $paper['degree'] = "修士";
-    }elseif($paper['degree'] == "Doctor"){
+    }elseif($paper['degree'] == "Doctor" || $paper['degree'] == "博士"){
         $paper['degree'] = "博士";
     }else{
         $paper['degree'] = "---";
@@ -227,22 +273,3 @@ function Transform($paper){
     return($paper);
 }
 ?>
-        </div>
-        </div>
-        <!-- /#page-content-wrapper -->
-    </div>
-    <!-- /#wrapper -->
-    <!-- jQuery -->
-    <script src="js/jquery.js"></script>
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
-    <!-- Menu Toggle Script -->
-    <script>
-    $("#menu-toggle").click(function(e) {
-        e.preventDefault();
-        $("#wrapper").toggleClass("toggled");
-    });
-    </script>
-</body>
-
-</html>
