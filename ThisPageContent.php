@@ -19,6 +19,7 @@ if($pageTitle == 'search'){
     //echo $query.$refine.$category;
     //echo "<br />";
     $dataArray = Search($paperArray,$query,$refine,$category);
+    //var_dump($dataArray);
     //第２引数で指定したkeyごとにソート(このkeyがコンテンツの見出しになる)
     $dataSortArray = CategorySort($dataArray,$categoryKey);
 }else{
@@ -149,16 +150,32 @@ function Search($paperArray,$query,$refine,$category){
                     $not++;
                 }
             }
+            //echo "<br />Search:".$paper;
             $paperResult = StringSearch($targetStrings,$query,$paper);
             if($paperResult == 'Paper'){
-                $paper = Transform($paper);
+                //$paper = Transform($paper);
                 $dataArray[] = $paper;
             }else{
                 $not++;
             }
         }
     }
+    //echo "<br />Search:";
+    //var_dump($dataArray);
     return($dataArray);
+}
+//入力された文字列で$paper内の著者名orキーワードを検索する関数
+function StringSearch($targetStrings,$query,$paper,$not,$dataCount){
+    //echo "<br />stringSearch";
+    if(strpos($targetStrings, $query) === FALSE){
+        //$not = NotPaper($not,$dataCount);
+        //return($not);
+        return('notPaper');
+    }else{
+        //検索結果を表示する
+        //Result($paper);
+        return('Paper');
+    }
 }
 //降順にソート
 function CategorySort($dataArray,$category){
@@ -183,20 +200,18 @@ function CategoryCount($paperArray,$category){
 //検索結果を表示する関数
 function Result($paper){
     //echo "<br />result";
-    //発表場所，発表形式，カテゴリを日本語表記に変換
-    $paper = Transform($paper);
     //ジャンルに問わず表示する内容（前半）
     echo '<div class="paper-fluid">
         <p>論文タイトル：</p>
         <h3>'.$paper['title'].'</h3>
         <p>著者名：'.$paper['author'].'</p>
         <p>学位：'.$paper['degree'].'</p>';
-    if($paper['genre']==2){
+    if($paper['genre']=='学位論文'){
         //修論・卒論の表示
         echo '<p>発表年：'.$paper['year'].'</p>';
     }else{
         //学会発表・国際会議の表示
-        if($paper['genre']==0){
+        if($paper['genre']=='国内発表' || $paper['genre']=='国際会議'){
             echo '<p>学会名：'.$paper['journal'].'</p>';
         }else{
             echo '<p>論文誌名：'.$paper['journal'].'</p>';
