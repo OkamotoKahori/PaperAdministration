@@ -41,7 +41,7 @@ function Ajax(pageTitle){
                 selectLimit:limit
             },
             success: function(dataArray) {
-                //console.log(dataArray);
+                console.log(dataArray);
                 console.log("GetData");
                 $("div.container-fluid").append(dataArray);
             }

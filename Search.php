@@ -4,65 +4,16 @@ $pageTitle =  htmlspecialchars($_POST['pageTitle']);
 //database.txtの内容を検索できる形式に変換
 $paperArray = MAKE_PAPER_ARRAY();
 
-//なにでソートしたいかを判断
-//$sortKey = 'year';
-$limit =  htmlspecialchars($_POST['selectLimit']);
-if($limit == 'Conference'){
-    $sortKey = 'journal';
-}elseif($limit == 'Author'){
-    $sortKey = 'author';
-}elseif($limit == 'Year'){
-    $sortKey = 'year';
-}elseif($limit == 'Category'){
-    $sortKey = 'category';
-}else{
-   $sortKey = 'genre';
-}
 //ページごとに表示する論文を$dataArrayに入れる
-if($pageTitle == 'search'){
-    //入力された情報を取得
-    $query = htmlspecialchars($_POST['queryValue']);
-    $refine = htmlspecialchars($_POST['queryRefine']);
-    $category = htmlspecialchars($_POST['queryCategory']);
-    //入力された情報を使って検索する
-    $paperArray = SEARCH($paperArray,$query,$refine,$category);
-}else{
-    //searchじゃないときの処理
-    echo "notSearch";
-    
-}
-
-//表示する論文の配列を作る
-//見出しごとの論文の数を数える
-foreach ($paperArray as $paper) {
-    $sortKeyArray[] = $paper[$sortKey];
-}
-$indexCountArray = array_count_values($sortKeyArray);
-//見出しの配列をつくる
-$indexArray = array_keys($indexCountArray);
-//見出しがいくつあるのかを数える（見出しが入っている配列のデータの個数を調べる）
-$indexLength = count($indexArray);
-//見出しを含む論文を取り出す
-for ($i=0; $i < $indexLength; $i++) {
-    $index = $indexArray[$i];
-    $indexNumArray[$index] = array_keys($sortKeyArray,$index);
-}
-//連想配列を作る
-for($i = 0; $i < $indexLength; $i++){
-    //見出しを入れる
-    $index = $indexArray[$i];
-    for ($j = 0; $j < $indexCountArray[$index]; $j++) {
-        //さっき入れた見出しをキーとする論文の配列をいれる
-        $num = $indexNumArray[$index][$j];
-        //データを日本語表記に変更して配列に入れなおす
-        $trans_paper = TRANSFORM($paperArray[$num]);
-        $dataArray[$index][$j] = $trans_paper;
-    }
-}
-//ソートする
-krsort($dataArray);
-//main.jsにソート・変換されたdataArrayを渡す
-//var_dump($dataArray);
+//入力された情報を取得
+$query = htmlspecialchars($_POST['queryValue']);
+$refine = htmlspecialchars($_POST['queryRefine']);
+$category = htmlspecialchars($_POST['queryCategory']);
+//入力された情報を使って検索する
+$paperArray = PAPER_SEARCH($paperArray,$pageTitle,$query,$refine,$category);
+//検索結果をソートし，日本語表記に変換する
+$limit =  htmlspecialchars($_POST['selectLimit']);
+$dataArray = PAPER_SORT($paperArray,$limit);
 
 //ソート・変換された$dataArrayを表示する
 foreach ($dataArray as $index => $papers) {
@@ -88,65 +39,151 @@ function MAKE_PAPER_ARRAY(){
     return($paperArray);
 }
 //検索する関数
-function SEARCH($paperArray,$query,$refine,$category){
-    //クエリが入力されているかどうかを判断
-    if(empty($query)){
-        //クエリが入力されていない場合
-        //カテゴリの指定があるかどうかを判断
+function PAPER_SEARCH($paperArray,$pageTitle,$query,$refine,$category){
+    $dataArray = array();
+    if($pageTitle != 'search'){
         foreach ($paperArray as $paper) {
-            if($category == "all"){
-                //全ての論文を表示する
-                $dataArray[] = $paper;
-            }elseif($category == $paper['category']){
-                //指定されたカテゴリの論文を表示する
-                $dataArray[] = $paper;
+            if($paper['genre']==0){
+                if($paper['location']=='Japan'){
+                    $Array0[] = $paper;
+                }else{
+                    $Array1[] = $paper;
+                }
+            }elseif($paper['genre']==1){
+                $Array2[] = $paper;
+            }elseif($paper['genre']==2){
+                $Array3[] = $paper;
             }else{
-                //指定されたカテゴリの論文がなかった場合
-                //$not++;
+                //ない場合
             }
         }
-    }else{
-        //クエリが入力されている場合
-        //クエリの種類（ラジオボタン）がどれかを判断
-        if($refine == 's_author'){
-            //著者の場合
-            $targetKey = 'author';
-        }elseif($refine == 's_keyword'){
-            //キーワードの場合
-            $targetKey = 'keyword';
+        if($pageTitle == 'all_paper'){
+            //all_paperの場合はすべての論文を使う
+            $ArraySet = array($Array0,$Array1,$Array2,$Array3);
+            for($i=0;$i<4;$i++){
+                if(isset($ArraySet[$i])){
+                    $dataArray = array_merge($dataArray,$ArraySet[$i]);
+                }
+            }
+        }elseif($pageTitle == 'national'){
+            $dataArray = $Array0;
+        }elseif($pageTitle == 'international'){
+            $dataArray = $Array1;
+        }elseif($pageTitle == 'journal'){
+            $dataArray = $Array2;
+        }elseif($pageTitle == 'tesis'){
+            $dataArray = $Array3;
         }else{
-            //すべての場合
-            $targetKey = 'free';
+            //ない場合
+            //$dataArray = array();
         }
-        //検索する
-        foreach ($paperArray as $paper) {
-            if($targetKey == "free"){
-                //すべての情報を１つの文字列にする
-                //$paper = Transform($paper);
-                $targetStrings = $paper['title'].$paper['author'].$paper['year'].$paper['journal'].$paper['location'].$paper['form'].$paper['keyword'];
-            }else{
+    }else{
+        //クエリが入力されているかどうかを判断
+        if(empty($query)){
+            //クエリが入力されていない場合
+            //カテゴリの指定があるかどうかを判断
+            foreach ($paperArray as $paper) {
                 if($category == "all"){
-                    $targetStrings = $paper[$targetKey];
+                    //全ての論文を表示する
+                    $dataArray[] = $paper;
                 }elseif($category == $paper['category']){
-                    $targetStrings = $paper[$targetKey];
+                    //指定されたカテゴリの論文を表示する
+                    $dataArray[] = $paper;
                 }else{
+                    //指定されたカテゴリの論文がなかった場合
                     //$not++;
                 }
             }
-            //入力された文字列で$paper内の著者名orキーワードを検索する
-            if(strpos($targetStrings, $query) === FALSE){
-                //$not++;
+        }else{
+            //クエリが入力されている場合
+            //クエリの種類（ラジオボタン）がどれかを判断
+            if($refine == 's_author'){
+                //著者の場合
+                $targetKey = 'author';
+            }elseif($refine == 's_keyword'){
+                //キーワードの場合
+                $targetKey = 'keyword';
             }else{
-                $dataArray[] = $paper;
+                //すべての場合
+                $targetKey = 'free';
+            }
+            //検索する
+            foreach ($paperArray as $paper) {
+                if($targetKey == "free"){
+                    //すべての情報を１つの文字列にする
+                    $targetStrings = $paper['title'].$paper['author'].$paper['year'].$paper['journal'].$paper['location'].$paper['form'].$paper['keyword'];
+                }else{
+                    if($category == "all"){
+                        $targetStrings = $paper[$targetKey];
+                    }elseif($category == $paper['category']){
+                        $targetStrings = $paper[$targetKey];
+                    }else{
+                        //$not++;
+                    }
+                }
+                //入力された文字列で$paper内の著者名orキーワードを検索する
+                if(strpos($targetStrings, $query) === FALSE){
+                    //$not++;
+                }else{
+                    $dataArray[] = $paper;
+                }
             }
         }
     }
-    //echo "<br />Search:";
-    //var_dump($dataArray);
+    return($dataArray);
+}
+//並び替える関数
+function PAPER_SORT($paperArray,$limit){
+    //なにでソートしたいかを判断
+    if($limit == 'Conference'){
+        if($paperArray[0]['genre']==2){
+            $sortKey = 'degree';
+        }else{
+            $sortKey = 'journal';
+        }
+    }elseif($limit == 'Author'){
+        $sortKey = 'author';
+    }elseif($limit == 'Year'){
+        $sortKey = 'year';
+    }elseif($limit == 'Category'){
+        $sortKey = 'category';
+    }else{
+       $sortKey = 'genre';
+    }
+    //表示する論文の配列を作る
+    //見出しごとの論文の数を数える
+    foreach ($paperArray as $paper) {
+        $sortKeyArray[] = $paper[$sortKey];
+    }
+    $indexCountArray = array_count_values($sortKeyArray);
+    //見出しの配列をつくる
+    $indexArray = array_keys($indexCountArray);
+    //見出しがいくつあるのかを数える（見出しが入っている配列のデータの個数を調べる）
+    $indexLength = count($indexArray);
+    //見出しを含む論文を取り出す
+    for ($i=0; $i < $indexLength; $i++) {
+        $index = $indexArray[$i];
+        $indexNumArray[$index] = array_keys($sortKeyArray,$index);
+    }
+    //連想配列を作る
+    for($i = 0; $i < $indexLength; $i++){
+        //見出しを入れる
+        $index = $indexArray[$i];
+        for ($j = 0; $j < $indexCountArray[$index]; $j++) {
+            //さっき入れた見出しをキーとする論文の配列をいれる
+            $num = $indexNumArray[$index][$j];
+            //データを日本語表記に変更して配列に入れなおす
+            $trans_paper = PAPER_TRANSFORM($paperArray[$num]);
+            $dataArray[$index][$j] = $trans_paper;
+        }
+    }
+    //ソートする
+    krsort($dataArray);
+    //main.jsにソート・変換されたdataArrayを渡す
     return($dataArray);
 }
 //発表場所，発表形式，学位，カテゴリを日本語表記に変換する関数
-function TRANSFORM($paper){
+function PAPER_TRANSFORM($paper){
     //echo "<br />Transform";
     //ジャンルを日本語表記に変換する
     if($paper['genre'] == 0){
