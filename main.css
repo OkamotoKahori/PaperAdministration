@@ -2,3 +2,27 @@
 .space{
   height: 30px;
 }
+/*ラジオボタンのデザイン*/
+.LimitTheSearch input{
+	display: none;
+}
+.LimitTheSearch label{
+	display: block;
+	float: left;
+	position: relative;
+	cursor: pointer;
+	width: 60px;
+	margin: 0;
+	padding: 6px;
+	background: #000;
+	color: #999;
+	font-weight: normal;
+	text-align: center;
+	border-bottom: 1px solid #fff;
+    padding-bottom: 10px;
+	transition: .2s;
+}
+.LimitTheSearch input[type="radio"]:checked + label {
+	background: rgba(255, 255, 255, 0.2);
+	color: #fff;
+}

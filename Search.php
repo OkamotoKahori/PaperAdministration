@@ -1,41 +1,50 @@
 <?php
-//Topページでクリックした項目を取得
-$pageTitle =  htmlspecialchars($_POST['pageTitle']);
-//database.txtの内容を検索できる形式に変換
-$paperArray = MAKE_PAPER_ARRAY();
+//１．入力された情報を取得
+$pageTitle =  htmlspecialchars($_POST['pageTitle']);//Topページでクリックされた項目
+if($pageTitle == 'limit'){
+    $pageTitle='all_paper';
+}
 
-//ページごとに表示する論文を$dataArrayに入れる
-//入力された情報を取得
-$query = htmlspecialchars($_POST['queryValue']);
-$refine = htmlspecialchars($_POST['queryRefine']);
-$category = htmlspecialchars($_POST['queryCategory']);
-//入力された情報を使って検索する
-$paperArray = PAPER_SEARCH($paperArray,$pageTitle,$query,$refine,$category);
-//検索結果をソートし，日本語表記に変換する
-$limit =  htmlspecialchars($_POST['selectLimit']);
-$dataArray = PAPER_SORT($paperArray,$limit);
-
-//ソート・変換された$dataArrayを表示する
+$query = htmlspecialchars($_POST['queryValue']);//絞込検索のテキストボックスに入力された情報
+$refine = htmlspecialchars($_POST['queryRefine']);//何で絞込検索するかを選択するラジオボタン
+$category = htmlspecialchars($_POST['queryCategory']);//絞込検索で選択されたドロップダウンリストの分野
+$limit =  htmlspecialchars($_POST['selectLimit']);//何でソートするかを選択するラジオボタン
+//２．入力された情報を使って検索する
+$paperArray = MAKE_PAPER_ARRAY($pageTitle);//database.txtの内容を検索できる形式に変換
+$paperArray = PAPER_SEARCH($paperArray,$pageTitle,$query,$refine,$category);//databexe.txtの中から入力された情報を含む論文の配列を取り出す
+//３．検索結果をソートし，日本語表記に変換する
+$dataArray = PAPER_SORT($paperArray,$limit,$pageTitle);//２．で取り出した論文の配列をソートする
+//4．ソート・変換された$dataArrayを表示する
 foreach ($dataArray as $index => $papers) {
+    $index = INDEX_TRANSFORM($index);//indexを日本語表記に変更して表示する
     echo ' <h1>'.$index.'</h1>';
     $paperArray = $papers;
     foreach ($paperArray as $paper) {
         RESULT($paper);
     }
 }
+//var_dump($dataArray);
 
 //database.txtの内容を検索できる形式に変換する関数
-function MAKE_PAPER_ARRAY(){
-    //echo "<br />makeData";
-    //database.txtの内容を$databaseに格納
-    $database = file_get_contents("database.txt");
-    //database.txtの内容を改行で区切る
-    $dataArray = explode("\n", $database);
-    //一人前ずつのデータを取り出します
-    foreach ($dataArray as $data) {
-        //文字列をphpのソースとして読めるようにする
-        eval('$paperArray[] = '.$data.';');
-    }
+function MAKE_PAPER_ARRAY($pageTitle){
+    /*$paperArray = array();
+    if($pageTitle=='limit'){
+        $dataArray =  htmlspecialchars($_POST['dataArray']);//現在表示されている配列を取得
+        foreach ($dataArray as $index => $papers) {
+            $paperArray = array_merge($paperArray,$papers);
+        }
+    }else{*/
+        //echo "<br />makeData";
+        //database.txtの内容を$databaseに格納
+        $database = file_get_contents("database.txt");
+        //database.txtの内容を改行で区切る
+        $dataArray = explode("\n", $database);
+        //一人前ずつのデータを取り出します
+        foreach ($dataArray as $data) {
+            //文字列をphpのソースとして読めるようにする
+            eval('$paperArray[] = '.$data.';');
+        }
+    //}
     return($paperArray);
 }
 //検索する関数
@@ -133,10 +142,10 @@ function PAPER_SEARCH($paperArray,$pageTitle,$query,$refine,$category){
     return($dataArray);
 }
 //並び替える関数
-function PAPER_SORT($paperArray,$limit){
+function PAPER_SORT($paperArray,$limit,$pageTitle){
     //なにでソートしたいかを判断
     if($limit == 'Conference'){
-        if($paperArray[0]['genre']==2){
+        if($pageTitle=='all_paper' || $pageTitle=='tesis'){
             $sortKey = 'degree';
         }else{
             $sortKey = 'journal';
@@ -182,6 +191,34 @@ function PAPER_SORT($paperArray,$limit){
     //main.jsにソート・変換されたdataArrayを渡す
     return($dataArray);
 }
+//インデックスの表記を日本語にする
+function INDEX_TRANSFORM($index){
+    //分野を変換
+    if($index == "Real"){
+        $index = "実世界";
+    }elseif($index == "Communication"){
+        $index = "コミュニケーション";
+    }elseif($index == "Gimmick"){
+        $index = "仕掛学";
+    }elseif($index == "InformationCompiled"){
+        $index = "情報編纂";
+    }elseif($index == "Comic"){
+        $index = "コミック工学";
+    }elseif($index == "Onomatopoeia"){
+        $index = "オノマトペ";
+    }elseif($index == "all"){
+        $index = "all";
+    }elseif($index == "Bachelor"){
+        $index = "学士";
+    }elseif($index == "Master"){
+        $index = "修士";
+    }elseif($pindex == "Doctor"){
+        $index = "博士";
+    }else{
+        $index = $index;
+    }
+    return($index);
+}
 //発表場所，発表形式，学位，カテゴリを日本語表記に変換する関数
 function PAPER_TRANSFORM($paper){
     //echo "<br />Transform";
@@ -221,7 +258,7 @@ function PAPER_TRANSFORM($paper){
     }else{
         $paper['form'] = "口頭発表＋ポスター発表";
     }
-    //カテゴリを日本語表記に変換する関数
+    //カテゴリを日本語表記に変換する
     if($paper['category'] == "Real"){
         $paper['category'] = "実世界";
     }elseif($paper['category'] == "Communication"){

@@ -1,3 +1,4 @@
+var DataArray = new Array();
 function Ajax(pageTitle){
     console.log("Start_Ajax.js");
     //What'sNewを表示する
@@ -16,7 +17,30 @@ function Ajax(pageTitle){
                 }
             }
         });
-    }else{
+    }/*else if(pageTitle == 'limit'){
+        console.log(DataArray);
+        //論文を表示させている部分を空にする
+        $(".WhatsNew p").empty();
+        $("div.container-fluid").empty();
+        //ajaxでThisPageContent.phpから表示する論文が入った配列を取得
+        $.ajax({
+            type: "POST",
+            url: "Search.php",
+            data: {
+                pageTitle:pageTitle,
+                queryValue:query,
+                queryRefine:refine,
+                queryCategory:category,
+                selectLimit:limit,
+                dataArray:DataArray
+            },
+            success: function(dataArray) {
+                console.log(dataArray);
+                console.log("GetLimitData");
+                //$("div.container-fluid").append(dataArray);
+            }
+        });
+    }*/else{
         //論文を表示させている部分を空にする
         $(".WhatsNew p").empty();
         $("div.container-fluid").empty();
@@ -26,22 +50,20 @@ function Ajax(pageTitle){
         var refine = document.search.refine.value;
         var category = document.search.category.value;
         var limit = document.LimitTheSearch.limit.value;
-        console.log(query);
-        console.log(refine);
-        console.log(category);
-        console.log(limit);
         //ajaxでThisPageContent.phpから表示する論文が入った配列を取得
         $.ajax({
             type: "POST",
             url: "Search.php",
-            data: {pageTitle:pageTitle,
+            data: {
+                pageTitle:pageTitle,
                 queryValue:query,
                 queryRefine:refine,
                 queryCategory:category,
                 selectLimit:limit
             },
             success: function(dataArray) {
-                console.log(dataArray);
+                //console.log(dataArray);
+                DataArray = dataArray;
                 console.log("GetData");
                 $("div.container-fluid").append(dataArray);
             }

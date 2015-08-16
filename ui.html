@@ -8,6 +8,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="css/simple-sidebar.css" rel="stylesheet">
+    <link href="main.css" rel="stylesheet">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
@@ -25,23 +26,25 @@
                         論文管理システム
                     </a>
                 </li>
-                <form name="LimitTheSearch">
-                    <input type="radio" name="limit" value="Conference" class="btn btn-lg" id="Conference" checked>学会順
-                    <input type="radio" name="limit" value="Author" class="btn btn-lg" id="Author">著者順
-                    <input type="radio" name="limit" value="Year" class="btn btn-lg" id="Year">年代順
-                    <input type="radio" name="limit" value="Category" class="btn btn-lg" id="Category">分野順
-                </form>
+                <div class="LimitTheSearch">
+                    <form name="LimitTheSearch">
+                        <input type="radio" name="limit" value="Year" id="Year" onClick="Ajax('limit');" checked>
+                        <label for="Year">年代順</label>
+                        <input type="radio" name="limit" value="Author" id="Author" onClick="Ajax('limit');">
+                        <label for="Author">著者順</label>
+                        <input type="radio" name="limit" value="Conference" id="Conference" onClick="Ajax('limit');">
+                        <label for="Conference">学会順</label>
+                        <input type="radio" name="limit" value="Category" id="Category" onClick="Ajax('limit');">
+                        <label for="Category">分野順</label>
+                    </form>
+                </div>
+                <div class="space"></div>
+                <div class="space"></div>
                 <div class="index-fluid">
-                    <p></p>
-                        <li>
-                            <a href="ui.html">UIデザイン</a>
-                        </li>
-                        <li>
-                            <a href="test.html">テスト</a>
-                        </li>
                         <li>
                             <a href="#" onClick="Ajax('all_paper');">すべて</a>
                         </li>
+                        <p></p>
                         <li>
                             <a href="#" onClick="Ajax('national');">国内発表</a>
                         </li>
@@ -62,23 +65,18 @@
                         </li>
                 </div>
                 <div class="space"></div>
-                <!--<form action="search.php" method="post" enctype="multipart/form-data" accept-charset="utf-8">-->
                 <form name="search">
                     <li>
                         <font color="white">絞り込み検索</font>
                     </li>
                     <input type="text" name="query" size="20">
                     <li>
-                        <input type="radio" name="refine" value="s_author" checked>
-                        <font color="white">著者</font>
-                    </li>
-                    <li>
-                        <input type="radio" name="refine" value="s_keyword">
-                        <font color="white">キーワード</font>
-                    </li>
-                    <li>
-                        <input type="radio" name="refine" value="s_all">
+                        <input type="radio" name="refine" value="s_all" checked>
                         <font color="white">すべて</font>
+                    </li>
+                    <li>
+                        <input type="radio" name="refine" value="s_author">
+                        <font color="white">著者</font>
                     </li>
                     <li>
                         <font color="white">分野の選択</font>
@@ -93,7 +91,6 @@
                         <option value="Onomatopoeia">オノマトペ</option>
                     </select>
                     <input onClick="Ajax('search');" type="button" name="r_submit" value="検索">
-                    <!--<input type="button" name="search" value="検索" onClick="Ajax('search');">-->
                 </form>
                 <div class="space"></div>
                 <li>
@@ -105,9 +102,6 @@
         <!-- Page Content -->
         <div id="page-content-wrapper">
             <div class="container-fluid">
-                <div class="paper-fluid">
-                    <p></p>
-                </div>
                 <div class="WhatsNew">
                     <p></p>
                 </div>
