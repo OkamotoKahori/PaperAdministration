@@ -8,15 +8,14 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="css/simple-sidebar.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="main.css">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>PHP入門</title>
+    <title>PHP+Ajax入門</title>
+    <script src="main.js"></script>
 </head>
-
-<body>
+<body onLoad="Ajax('WhatsNew');">
     <div id="wrapper">
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
@@ -26,32 +25,42 @@
                         論文管理システム
                     </a>
                 </li>
-                <li>
-                    <a href="test.html">テスト</a>
-                </li>
-                <li>
-                    <a href="all_paper.php">すべて</a>
-                </li>
-                <li>
-                    <a href="national.php">国内発表</a>
-                </li>
-                <li>
-                    <a href="international.php">国際会議</a>
-                </li>
-                <li>
-                    <a href="journal.php">論文誌</a>
-                </li>
-                <li>
-                    <a href="thesis.php">学位論文</a>
-                </li>
-                <li>
-                    <a href="award.html">受賞</a>
-                </li>
-                <li>
-                    <a href="press.html">報道</a>
-                </li>
+                <form name="LimitTheSearch">
+                    <input type="radio" name="limit" value="Conference" class="btn btn-lg" id="Conference" checked>学会順
+                    <input type="radio" name="limit" value="Author" class="btn btn-lg" id="Author">著者順
+                    <input type="radio" name="limit" value="Year" class="btn btn-lg" id="Year">年代順
+                    <input type="radio" name="limit" value="Category" class="btn btn-lg" id="Category">分野順
+                </form>
+                <div class="index-fluid">
+                    <p></p>
+                        <li>
+                            <a href="test.html">テスト２</a>
+                        </li>
+                        <li>
+                            <a href="#" onClick="Ajax('all_paper');">すべて</a>
+                        </li>
+                        <li>
+                            <a href="#" onClick="Ajax('national');">国内発表</a>
+                        </li>
+                        <li>
+                            <a href="#" onClick="Ajax('international');">国際会議</a>
+                        </li>
+                        <li>
+                            <a href="#" onClick="Ajax('journal');">論文誌</a>
+                        </li>
+                        <li>
+                            <a href="#" onClick="Ajax('tesis');">学位論文</a>
+                        </li>
+                        <li>
+                            <a href="#" onClick="Ajax('award');">受賞</a>
+                        </li>
+                        <li>
+                            <a href="#" onClick="Ajax('press');">報道</a>
+                        </li>
+                </div>
                 <div class="space"></div>
-                <form action="search.php" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+                <!--<form action="search.php" method="post" enctype="multipart/form-data" accept-charset="utf-8">-->
+                <form name="search">
                     <li>
                         <font color="white">絞り込み検索</font>
                     </li>
@@ -80,7 +89,8 @@
                         <option value="Comic">コミック工学</option>
                         <option value="Onomatopoeia">オノマトペ</option>
                     </select>
-                    <input type="submit" name="r_submit" value="検索">
+                    <input onClick="Ajax('search');" type="button" name="r_submit" value="検索">
+                    <!--<input type="button" name="search" value="検索" onClick="Ajax('search');">-->
                 </form>
                 <div class="space"></div>
                 <li>
@@ -92,29 +102,12 @@
         <!-- Page Content -->
         <div id="page-content-wrapper">
             <div class="container-fluid">
-                <h1>What's new!</h1>
-                <p>以下の論文がアップロードされました</p>
+                <div class="paper-fluid">
+                    <p></p>
+                </div>
                 <div class="WhatsNew">
                     <p></p>
                 </div>
-                <!-- What's New!用 -->
-                <script type="text/javascript">
-                // テキストファイルを最新のものが上になるように逆順に並べて表示する
-                $(function() {
-                    $.ajax({
-                        url: 'WhatsNew.txt',
-                        success: function(data) {
-                            var data_array = data.split(/\r\n|\r|\n/); //改行コードで分割
-                            var len = data_array.length;
-                            for (var i = len - 1; i >= 0; i--) {
-                                console.log(data_array[i]);
-                                $(".WhatsNew p").append(data_array[i] + "<br />");
-
-                            }
-                        }
-                    });
-                });
-                </script>
             </div>
         </div>
         <!-- /#page-content-wrapper -->
@@ -132,5 +125,4 @@
     });
     </script>
 </body>
-
 </html>
